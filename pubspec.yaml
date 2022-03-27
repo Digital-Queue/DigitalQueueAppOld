@@ -1,5 +1,5 @@
 name: digital_queue
-description: A new Flutter project.
+description: Digital Queue for teachers and students to track courses projects and tasks review requests.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
