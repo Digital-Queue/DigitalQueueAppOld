@@ -92,12 +92,18 @@ class _LoginState extends State<Login> {
               ),
             ),
             const SizedBox(
-              height: 8,
+              height: 24,
             ),
             TextButton(
                 onPressed: () {},
                 child: const Text(
                   "Forgot Password?",
+                  style: TextStyle(fontSize: 16),
+                )),
+            TextButton(
+                onPressed: () {},
+                child: const Text(
+                  "Don't have account? create one.",
                   style: TextStyle(fontSize: 16),
                 ))
           ],
