@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Digital Queue',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.green,
       ),
       home: const MyHomePage(),
     );
