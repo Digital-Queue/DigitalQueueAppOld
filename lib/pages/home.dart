@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:digital_queue/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,16 +18,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[50],
+      /*
       appBar: AppBar(
         title: const Text("Digital Queue"),
         elevation: 5,
         centerTitle: true,
         toolbarHeight: 72,
       ),
+      */
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             // image
             Center(
               child: SizedBox(
