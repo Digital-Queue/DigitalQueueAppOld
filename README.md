@@ -9,3 +9,7 @@ Digital Queue mobile application.
 - https://iconscout.com/icon/login-2323459
 
 - https://iconscout.com/illustration/job-interview-in-the-office-2529181
+
+- https://iconscout.com/illustration/attract-users-2061895
+
+- https://iconscout.com/illustration/get-newsletter-updates-4602686
