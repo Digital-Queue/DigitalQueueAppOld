@@ -1,3 +1,4 @@
+import 'package:digital_queue/pages/recover_account.dart';
 import 'package:digital_queue/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -96,7 +97,12 @@ class _LoginPageState extends State<LoginPage> {
               height: 24,
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const RecoverAccountPage()));
+                },
                 child: const Text(
                   "Forgot Password?",
                   style: TextStyle(fontSize: 16),
