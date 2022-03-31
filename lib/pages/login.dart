@@ -1,14 +1,15 @@
+import 'package:digital_queue/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailTextController;
   late final TextEditingController _passwordTextController;
 
@@ -101,7 +102,10 @@ class _LoginState extends State<Login> {
                   style: TextStyle(fontSize: 16),
                 )),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const RegisterPage()));
+                },
                 child: const Text(
                   "Don't have account? create one.",
                   style: TextStyle(fontSize: 16),
