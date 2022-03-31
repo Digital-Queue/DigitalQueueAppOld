@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:digital_queue/pages/login.dart';
+import 'package:digital_queue/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const Login()));
+                          MaterialPageRoute(builder: (_) => const LoginPage()));
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -73,7 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 192,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const RegisterPage()));
+                    },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: const [
