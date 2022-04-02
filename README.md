@@ -1,4 +1,4 @@
-# digital_queue
+# Digital Queue
 
 Digital Queue mobile application.
 
