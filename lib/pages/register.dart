@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
 import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -36,7 +34,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
       body: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16),
         child: Column(
