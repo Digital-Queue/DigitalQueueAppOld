@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -108,8 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const LoginPage()));
+                  Navigator.pushNamed(context, "/login");
                 },
                 child: const Text(
                   "Already have account? Sign In",
