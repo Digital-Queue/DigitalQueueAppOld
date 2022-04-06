@@ -27,6 +27,7 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 48),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,7 +43,7 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
               height: 24,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(
                 children: [
                   TextField(
