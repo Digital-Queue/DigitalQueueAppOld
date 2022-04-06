@@ -1,4 +1,5 @@
 import 'package:digital_queue/pages/home.dart';
+import 'package:digital_queue/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.green,
           scaffoldBackgroundColor: Colors.green[50]),
-      home: const MyHomePage(),
+      home: const SplashScreenPage(),
     );
   }
 }
