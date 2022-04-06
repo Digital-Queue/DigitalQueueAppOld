@@ -28,13 +28,13 @@ class MyApp extends StatelessWidget {
               case ConnectionState.done:
                 return const LoginPage();
 
-              default:
-                return Scaffold(
-                  body: Center(
-                    child: SvgPicture.asset("assets/logo.svg"),
-                  ),
-                );
-            }
+                  default:
+                    return Scaffold(
+                      body: Center(
+                        child: SvgPicture.asset("assets/logo.svg"),
+                      ),
+                    );
+                }
           }),
       routes: {
         "/login": (context) => const LoginPage(),
