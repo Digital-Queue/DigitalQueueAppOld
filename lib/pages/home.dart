@@ -1,32 +1,14 @@
-import 'dart:ui';
-
 import 'package:digital_queue/pages/login.dart';
 import 'package:digital_queue/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final String mainScreenImageFile = 'assets/main_screen.svg';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
-      /*
-      appBar: AppBar(
-        title: const Text("Digital Queue"),
-        elevation: 5,
-        centerTitle: true,
-        toolbarHeight: 72,
-      ),
-      */
       body: SafeArea(
         child: Column(
           children: [
@@ -34,7 +16,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // image
             Center(
               child: SizedBox(
-                child: SvgPicture.asset(mainScreenImageFile),
+                child: SvgPicture.asset('assets/main_screen.svg'),
                 width: 350,
                 height: 350,
               ),
