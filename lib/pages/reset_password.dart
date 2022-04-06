@@ -1,4 +1,3 @@
-import 'package:digital_queue/pages/login.dart';
 import 'package:flutter/material.dart';
 
 class ResetPasswordPage extends StatefulWidget {
@@ -81,8 +80,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const LoginPage()));
+                      Navigator.pushNamed(context, "/login");
                     },
                     child: const Text('Change Password',
                         style: TextStyle(fontSize: 18)),

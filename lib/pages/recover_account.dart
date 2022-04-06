@@ -1,4 +1,3 @@
-import 'package:digital_queue/pages/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -64,10 +63,7 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const ResetPasswordPage()));
+                      Navigator.pushNamed(context, "/reset-password");
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,3 @@
-import 'package:digital_queue/pages/recover_account.dart';
-import 'package:digital_queue/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -97,10 +95,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const RecoverAccountPage()));
+                  Navigator.pushNamed(context, "/recover-account");
                 },
                 child: const Text(
                   "Forgot Password?",
@@ -108,8 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                 )),
             TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const RegisterPage()));
+                  Navigator.pushNamed(context, "/register");
                 },
                 child: const Text(
                   "Don't have account? create one.",
