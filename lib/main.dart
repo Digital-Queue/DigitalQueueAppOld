@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       title: 'Digital Queue',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+          primarySwatch: Colors.green,
+          scaffoldBackgroundColor: Colors.green[50]),
       home: const MyHomePage(),
     );
   }

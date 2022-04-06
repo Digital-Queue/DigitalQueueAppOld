@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
       body: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16),
         child: Column(
