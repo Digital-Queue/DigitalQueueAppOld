@@ -2,35 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends StatefulWidget {
+import '../controllers/login_controller.dart';
+
+class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  late final TextEditingController _emailTextController;
-  late final TextEditingController _passwordTextController;
-
-  @override
-  void initState() {
-    _emailTextController = TextEditingController();
-    _passwordTextController = TextEditingController();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _emailTextController.dispose();
-    _passwordTextController.dispose();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<LoginController>();
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 48),
@@ -47,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 32,
                 ),
                 TextFormField(
-                  controller: _emailTextController,
+                  controller: controller.emailTextController,
                   autocorrect: false,
                   enableSuggestions: false,
                   keyboardType: TextInputType.emailAddress,
@@ -61,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 16,
                 ),
                 TextFormField(
-                  controller: _passwordTextController,
+                  controller: controller.passwordTextController,
                   autocorrect: false,
                   enableSuggestions: false,
                   keyboardType: TextInputType.text,

@@ -1,31 +1,15 @@
+import 'package:digital_queue/controllers/recover_account_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-class RecoverAccountPage extends StatefulWidget {
+class RecoverAccountPage extends StatelessWidget {
   const RecoverAccountPage({Key? key}) : super(key: key);
 
   @override
-  State<RecoverAccountPage> createState() => _RecoverAccountPageState();
-}
-
-class _RecoverAccountPageState extends State<RecoverAccountPage> {
-  late final TextEditingController _emailFieldController;
-
-  @override
-  void initState() {
-    _emailFieldController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _emailFieldController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<RecoverAccountController>();
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 48),
@@ -49,7 +33,7 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: _emailFieldController,
+                      controller: controller.emailTextController,
                       autocorrect: false,
                       enableSuggestions: false,
                       keyboardType: TextInputType.emailAddress,
