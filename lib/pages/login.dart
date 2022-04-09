@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "/recover-account");
+                    Get.toNamed("/recover-account");
                   },
                   child: const Text(
                     "Forgot Password?",
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                   )),
               TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "/register");
+                    Get.toNamed("/register");
                   },
                   child: const Text(
                     "Don't have account? create one.",
