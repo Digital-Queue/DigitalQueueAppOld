@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class RecoverAccountPage extends StatefulWidget {
   const RecoverAccountPage({Key? key}) : super(key: key);
@@ -65,7 +66,7 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "/reset-password");
+                        Get.toNamed("/reset-password");
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

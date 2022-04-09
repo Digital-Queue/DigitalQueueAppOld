@@ -4,6 +4,7 @@ import 'package:digital_queue/pages/register.dart';
 import 'package:digital_queue/pages/reset_password.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Digital Queue',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -28,20 +29,21 @@ class MyApp extends StatelessWidget {
               case ConnectionState.done:
                 return const LoginPage();
 
-                  default:
-                    return Scaffold(
-                      body: Center(
-                        child: SvgPicture.asset("assets/logo.svg"),
-                      ),
-                    );
-                }
+              default:
+                return Scaffold(
+                  body: Center(
+                    child: SvgPicture.asset("assets/logo.svg"),
+                  ),
+                );
+            }
           }),
-      routes: {
-        "/login": (context) => const LoginPage(),
-        "/register": (context) => const RegisterPage(),
-        "/recover-account": (context) => const RecoverAccountPage(),
-        "/reset-password": (context) => const ResetPasswordPage()
-      },
+      getPages: [
+        GetPage(name: "/login", page: () => const LoginPage()),
+        GetPage(name: "/register", page: () => const RegisterPage()),
+        GetPage(
+            name: "/recover-account", page: () => const RecoverAccountPage()),
+        GetPage(name: "/reset-password", page: () => const ResetPasswordPage())
+      ],
     );
   }
 

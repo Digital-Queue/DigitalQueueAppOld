@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -108,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/login");
+                  Get.toNamed("/login");
                 },
                 child: const Text(
                   "Already have account? Sign In",
