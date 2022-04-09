@@ -2,6 +2,7 @@ import 'package:digital_queue/pages/login.dart';
 import 'package:digital_queue/pages/recover_account.dart';
 import 'package:digital_queue/pages/register.dart';
 import 'package:digital_queue/pages/reset_password.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
     return GetMaterialApp(
       title: 'Digital Queue',
       debugShowCheckedModeBanner: false,
