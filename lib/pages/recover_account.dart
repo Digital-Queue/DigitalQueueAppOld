@@ -45,46 +45,48 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _emailFieldController,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                        labelText: "Your email",
-                        prefixIcon: Icon(Icons.email),
-                        fillColor: Colors.white,
-                        filled: true),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  SizedBox(
-                    width: 210,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed("/reset-password");
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Text('Send Reset Code',
-                              style: TextStyle(fontSize: 18)),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.send,
-                            size: 32.0,
-                          ),
-                        ],
-                      ),
+              child: Form(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _emailFieldController,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                          labelText: "Your email",
+                          prefixIcon: Icon(Icons.email),
+                          fillColor: Colors.white,
+                          filled: true),
                     ),
-                  )
-                ],
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    SizedBox(
+                      width: 210,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed("/reset-password");
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Text('Send Reset Code',
+                                style: TextStyle(fontSize: 18)),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.send,
+                              size: 32.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],

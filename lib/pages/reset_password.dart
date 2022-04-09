@@ -46,49 +46,51 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _codeFieldController,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                        labelText: "Code",
-                        prefixIcon: Icon(Icons.numbers),
-                        fillColor: Colors.white,
-                        filled: true),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  TextField(
-                    controller: _passwordFieldController,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    obscureText: true,
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                        labelText: "New Password",
-                        prefixIcon: Icon(Icons.password),
-                        fillColor: Colors.white,
-                        filled: true),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  SizedBox(
-                    width: 210,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed("/login");
-                      },
-                      child: const Text('Change Password',
-                          style: TextStyle(fontSize: 18)),
+              child: Form(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _codeFieldController,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          labelText: "Code",
+                          prefixIcon: Icon(Icons.numbers),
+                          fillColor: Colors.white,
+                          filled: true),
                     ),
-                  )
-                ],
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    TextFormField(
+                      controller: _passwordFieldController,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                          labelText: "New Password",
+                          prefixIcon: Icon(Icons.password),
+                          fillColor: Colors.white,
+                          filled: true),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    SizedBox(
+                      width: 210,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed("/login");
+                        },
+                        child: const Text('Change Password',
+                            style: TextStyle(fontSize: 18)),
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],
