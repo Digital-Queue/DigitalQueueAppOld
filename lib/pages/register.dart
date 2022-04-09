@@ -1,38 +1,13 @@
+import 'package:digital_queue/controllers/register_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  late final TextEditingController _emailController;
-  late final TextEditingController _nameController;
-  late final TextEditingController _passwordController;
-
-  @override
-  void initState() {
-    _emailController = TextEditingController();
-    _nameController = TextEditingController();
-    _passwordController = TextEditingController();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _nameController.dispose();
-    _passwordController.dispose();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<RegisterController>();
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 16, right: 16),
@@ -46,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 250,
                   child: Image.asset("assets/sign_up.png")),
               TextFormField(
-                controller: _emailController,
+                controller: controller.emailTextController,
                 autocorrect: false,
                 enableSuggestions: false,
                 keyboardType: TextInputType.emailAddress,
@@ -60,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 16,
               ),
               TextFormField(
-                controller: _nameController,
+                controller: controller.nameTextController,
                 autocorrect: true,
                 enableSuggestions: true,
                 keyboardType: TextInputType.text,
@@ -74,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 16,
               ),
               TextFormField(
-                controller: _passwordController,
+                controller: controller.passwordTextController,
                 autocorrect: false,
                 enableSuggestions: false,
                 obscureText: true,

@@ -1,33 +1,14 @@
+import 'package:digital_queue/controllers/reset_password_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ResetPasswordPage extends StatefulWidget {
+class ResetPasswordPage extends StatelessWidget {
   const ResetPasswordPage({Key? key}) : super(key: key);
 
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
-}
-
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  late final TextEditingController _codeFieldController;
-  late final TextEditingController _passwordFieldController;
-
-  @override
-  void initState() {
-    _codeFieldController = TextEditingController();
-    _passwordFieldController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _codeFieldController.dispose();
-    _passwordFieldController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ResetPasswordController>();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -50,7 +31,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: _codeFieldController,
+                      controller: controller.codeTextController,
                       autocorrect: false,
                       enableSuggestions: false,
                       keyboardType: TextInputType.number,
@@ -64,7 +45,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       height: 24,
                     ),
                     TextFormField(
-                      controller: _passwordFieldController,
+                      controller: controller.newPasswordTextController,
                       autocorrect: false,
                       enableSuggestions: false,
                       obscureText: true,
