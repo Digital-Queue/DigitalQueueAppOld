@@ -24,6 +24,6 @@ class LoginController extends GetxController {
   }
 
   TextEditingController get passwordTextController {
-    return _emailTextController;
+    return _passwordTextController;
   }
 }
