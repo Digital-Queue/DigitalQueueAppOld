@@ -1,3 +1,4 @@
+import 'package:digital_queue/controllers/profile_controller.dart';
 import 'package:digital_queue/controllers/login_controller.dart';
 import 'package:digital_queue/controllers/recover_account_controller.dart';
 import 'package:digital_queue/controllers/register_controller.dart';
@@ -11,5 +12,6 @@ class ApplicationBindings extends Bindings {
     Get.put(RegisterController());
     Get.put(RecoverAccountController());
     Get.put(ResetPasswordController());
+    Get.put(ProfileController());
   }
 }
