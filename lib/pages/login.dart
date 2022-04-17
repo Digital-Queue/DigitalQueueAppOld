@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
                   width: 192,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => Get.offAllNamed("/profile"),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: const [

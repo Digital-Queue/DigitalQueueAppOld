@@ -1,4 +1,6 @@
 import 'package:digital_queue/bindings/application_binding.dart';
+import 'package:digital_queue/pages/confirm_email.dart';
+import 'package:digital_queue/pages/profile.dart';
 import 'package:digital_queue/pages/login.dart';
 import 'package:digital_queue/pages/recover_account.dart';
 import 'package:digital_queue/pages/register.dart';
@@ -47,7 +49,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/register", page: () => const RegisterPage()),
         GetPage(
             name: "/recover-account", page: () => const RecoverAccountPage()),
-        GetPage(name: "/reset-password", page: () => const ResetPasswordPage())
+        GetPage(name: "/reset-password", page: () => const ResetPasswordPage()),
+        GetPage(name: "/profile", page: () => ProfilePage()),
+        GetPage(name: "/confirm-email", page: () => ConfirmEmailPage())
       ],
       initialBinding: ApplicationBindings(),
     );
