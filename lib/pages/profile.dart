@@ -14,107 +14,144 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Profile"),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: controller.exit),
-        actions: [
-          IconButton(onPressed: controller.save, icon: const Icon(Icons.save))
-        ],
+          icon: const Icon(Icons.arrow_back),
+          onPressed: controller.exit,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(
+            left: 8,
+            right: 8,
+          ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Center(
-                    child: SvgPicture.asset(
-                  "assets/profile.svg",
+              Center(
+                heightFactor: 1.5,
+                child: SvgPicture.asset(
+                  "assets/user.svg",
                   height: 96,
-                )),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Account Details",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      autocorrect: false,
-                      enableSuggestions: false,
-                      keyboardType: TextInputType.name,
-                      decoration: const InputDecoration(
-                          labelText: "Name",
-                          prefixIcon: Icon(Icons.person),
-                          fillColor: Colors.white,
-                          filled: true),
-                      initialValue: controller.name.value,
-                      onChanged: (String value) =>
-                          controller.name.value = value,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      autocorrect: false,
-                      enableSuggestions: false,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                          labelText: "Email",
-                          prefixIcon: Icon(Icons.email),
-                          fillColor: Colors.white,
-                          filled: true),
-                      initialValue: controller.email.value,
-                      onChanged: (String value) =>
-                          controller.email.value = value,
-                    ),
-                    Container(
-                      child:
-                          GetBuilder<ProfileController>(builder: (controller) {
-                        if (!controller.emailConfirmed.value) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                    onPressed: controller.confirmEmail,
-                                    child: const Text("Confirm Email")),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Row();
-                        }
-                      }),
-                    )
-                  ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Account Password",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                    ),
-                    ElevatedButton(
-                        onPressed: controller.changePassword,
-                        child: const Text("Change Password"))
-                  ],
+              const Center(
+                heightFactor: 2,
+                child: Text(
+                  "Account Details",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    top: 16,
+                    bottom: 16,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        controller.name.value,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      const Divider(),
+                      Text(
+                        controller.email.value,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              showEmailNotConfirmedCard(),
+              const Divider(),
+              const Center(
+                heightFactor: 1.2,
+                child: Text(
+                  "Password",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: controller.changePassword,
+                child: const Text(
+                  "Change Password",
                 ),
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Card showEmailNotConfirmedCard() {
+    return Card(
+      color: Colors.amber[50],
+      child: GetBuilder<ProfileController>(
+        builder: (controller) {
+          if (!controller.emailConfirmed.value) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      left: 8,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        Icon(
+                          Icons.warning,
+                        ),
+                        Text(
+                          "Your e-mail address is not confirmed.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: controller.confirmEmail,
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateColor.resolveWith(
+                              (states) => Colors.black),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => Colors.yellow.shade600),
+                        ),
+                        child: const Text("Confirm Now"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Column();
+          }
+        },
       ),
     );
   }
