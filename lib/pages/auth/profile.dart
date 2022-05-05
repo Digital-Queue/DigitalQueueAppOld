@@ -10,12 +10,16 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // controller.initialize();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: controller.exit,
+          onPressed: () {
+            Get.offAndToNamed("/queue");
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -49,6 +53,7 @@ class ProfilePage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 16,
+                    right: 16,
                     top: 16,
                     bottom: 16,
                   ),
@@ -73,12 +78,11 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-              showEmailNotConfirmedCard(),
               const Divider(),
               const Center(
                 heightFactor: 1.2,
                 child: Text(
-                  "Password",
+                  "Settings",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -86,72 +90,24 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: controller.changePassword,
+                onPressed: () {
+                  Get.toNamed("/changeEmail");
+                },
                 child: const Text(
-                  "Change Password",
+                  "Change Email",
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.offNamed("/auth");
+                },
+                child: const Text(
+                  "Log Out",
                 ),
               )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Card showEmailNotConfirmedCard() {
-    return Card(
-      color: Colors.amber[50],
-      child: GetBuilder<ProfileController>(
-        builder: (controller) {
-          if (!controller.emailConfirmed.value) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      left: 8,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Icon(
-                          Icons.warning,
-                        ),
-                        Text(
-                          "Your e-mail address is not confirmed.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: controller.confirmEmail,
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.black),
-                          backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.yellow.shade600),
-                        ),
-                        child: const Text("Confirm Now"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Column();
-          }
-        },
       ),
     );
   }
