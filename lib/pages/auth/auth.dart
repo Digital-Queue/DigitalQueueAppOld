@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/login_controller.dart';
+import '../../controllers/auth_controller.dart';
 
 class AuthPage extends StatelessWidget {
   AuthPage({Key? key}) : super(key: key);
 
-  final controller = Get.find<LoginController>();
+  final controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +67,8 @@ class AuthPage extends StatelessWidget {
                           height: 16,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            Get.toNamed("/verifyAuth");
-                          },
+                          onPressed: () async =>
+                              await controller.authenticate(),
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all(
                               const EdgeInsets.only(

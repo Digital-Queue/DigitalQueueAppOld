@@ -1,21 +1,119 @@
 import 'package:digital_queue/models/user.dart';
+import 'package:digital_queue/services/error_result.dart';
+import 'package:digital_queue/services/profile_result.dart';
+import 'package:dio/dio.dart';
+
+import 'authentication_result.dart';
+
+abstract class ApiResult {
+  // TODO: marker abstract class
+
+  ApiResult();
+
+  factory ApiResult.ok() => OkResult();
+}
+
+class OkResult extends ApiResult {}
 
 class ApiClient {
-  final baseUrl = 'http://localhost:5241/api';
+  final baseUrl = 'http://10.0.2.2:5241/api';
+  late Dio client;
 
-  void signIn(String email, String password) {}
+  Future<ApiResult> initialize() async {
+    client = Dio(BaseOptions(baseUrl: baseUrl));
 
-  void signUp(User user, String password) {}
+    var response = await client.get(
+      "/",
+    );
 
-  void getProfile() {}
+    if (response.statusCode != 200) {
+      return ErrorResult(
+        message: getError(
+          response,
+        ),
+      );
+    }
 
-  void requestEmailConfirmation() {}
+    return OkResult();
+  }
 
-  void requestPasswordReset() {}
+  String getError(Response response) {
+    return response.data["message"] ?? "Something went wrong.";
+  }
 
-  void confirmEmail(String token) {}
+  Future<ApiResult> authenticate(String email) async {
+    var response = await client.post(
+      "/accounts/authenticate",
+      data: {
+        "email": email,
+      },
+    );
 
-  void resetPassword(String token, String password) {}
+    if (response.statusCode == 201) {
+      return AuthenticationStatus(
+        created: true,
+      );
+    }
 
-  void changeEmail(String email) {}
+    if (response.statusCode == 200) {
+      return AuthenticationStatus();
+    }
+
+    return ErrorResult(
+      message: getError(
+        response,
+      ),
+    );
+  }
+
+  Future<ApiResult> verifyAuthenticationCode(String email, String code) async {
+    var body = {
+      "email": email,
+      "token": code,
+    };
+
+    var response = await client.post(
+      "/accounts/verify-authentication",
+      data: body,
+    );
+
+    if (response.statusCode != 200) {
+      // TODO:
+      return ErrorResult(
+        message: getError(
+          response,
+        ),
+      );
+    }
+
+    return AuthenticationResult(
+      response.data.accessToken,
+      response.data.refreshToken,
+    );
+  }
+
+  Future<ApiResult> getProfile({required String accessToken}) async {
+    var response = await client.get(
+      "/accounts/get-profile",
+      options: Options(
+        headers: {"Authorization": "Bearer ${accessToken}"},
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      // TODO:
+      return ErrorResult(
+        message: getError(
+          response,
+        ),
+      );
+    }
+
+    return ProfileResult(
+      id: response.data["id"],
+      name: response.data["name"],
+      email: response.data["email"],
+      createAt: response.data["createdAt"],
+    );
+  }
 }

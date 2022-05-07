@@ -1,7 +1,7 @@
-import 'package:digital_queue/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 
-class RegisterController extends LoginController {
+class SetNameController extends GetxController {
   late final TextEditingController _nameTextController;
 
   @override
