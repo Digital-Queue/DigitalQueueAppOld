@@ -1,7 +1,5 @@
 import 'package:digital_queue/bindings/application_binding.dart';
 import 'package:digital_queue/controllers/main_controller.dart';
-import 'package:digital_queue/models/user.dart';
-import 'package:digital_queue/models/user_type_adapter.dart';
 import 'package:digital_queue/pages/auth/auth.dart';
 import 'package:digital_queue/pages/auth/set_name.dart';
 import 'package:digital_queue/pages/auth/verify_auth.dart';
@@ -13,16 +11,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final dir = await getApplicationDocumentsDirectory();
-  Hive.init(dir.path);
-  Hive.registerAdapter<User>(UserAdapter());
-
   runApp(MyApp());
 }
 

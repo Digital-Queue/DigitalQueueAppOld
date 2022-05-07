@@ -1,4 +1,4 @@
-import 'package:digital_queue/controllers/register_controller.dart';
+import 'package:digital_queue/controllers/verify_auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,7 +7,7 @@ class VerifyAuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<RegisterController>();
+    final controller = Get.find<VerifyAuthController>();
 
     return Scaffold(
       body: LayoutBuilder(
@@ -49,7 +49,7 @@ class VerifyAuthPage extends StatelessWidget {
                           height: 16,
                         ),
                         TextFormField(
-                          controller: null,
+                          controller: controller.codeTextController,
                           autocorrect: false,
                           enableSuggestions: false,
                           keyboardType: TextInputType.number,
@@ -68,8 +68,8 @@ class VerifyAuthPage extends StatelessWidget {
                           width: 192,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed("/setName");
+                            onPressed: () async {
+                              await controller.verifyAuthCode();
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,

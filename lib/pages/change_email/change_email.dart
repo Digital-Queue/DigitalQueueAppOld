@@ -1,4 +1,3 @@
-import 'package:digital_queue/controllers/recover_account_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -8,8 +7,6 @@ class ChangeEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<RecoverAccountController>();
-
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(
@@ -40,7 +37,7 @@ class ChangeEmailPage extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
-                          controller: controller.emailTextController,
+                          // controller:
                           autocorrect: false,
                           enableSuggestions: false,
                           keyboardType: TextInputType.emailAddress,

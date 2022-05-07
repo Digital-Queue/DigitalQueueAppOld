@@ -6,18 +6,11 @@ class ProfileController extends GetxController {
   var emailConfirmed = false.obs;
   var confirmEmailCode = "".obs;
 
+  void initialize() {
+    // TODO: fetch profile
+  }
+
   void changeEmail() {}
-
-  void confirmEmail() {
-    Get.toNamed("/confirm-email", parameters: {"sendCode": "true"});
-    emailConfirmed.value = true;
-  }
-
-  void changePassword() {
-    Get.toNamed("/reset-password", parameters: {"sendCode": "true"});
-  }
-
-  void save() {}
 
   void exit() {}
 }

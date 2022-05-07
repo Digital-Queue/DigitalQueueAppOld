@@ -1,8 +1,11 @@
+import 'package:digital_queue/controllers/set_name_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SetNamePage extends StatelessWidget {
-  const SetNamePage({Key? key}) : super(key: key);
+  SetNamePage({Key? key}) : super(key: key);
+
+  final controller = Get.find<SetNameController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class SetNamePage extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
-                    // controller:
+                    controller: controller.nameTextController,
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.text,
