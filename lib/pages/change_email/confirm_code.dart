@@ -1,11 +1,7 @@
-import 'package:digital_queue/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ConfirmCodePage extends StatelessWidget {
-  ConfirmCodePage({Key? key}) : super(key: key);
-
-  final controller = Get.find<ProfileController>();
+  const ConfirmCodePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +43,7 @@ class ConfirmCodePage extends StatelessWidget {
                               prefixIcon: Icon(Icons.numbers),
                               fillColor: Colors.white,
                               filled: true),
-                          onChanged: (String value) {
-                            controller.confirmEmailCode.value = value;
-                          },
+                          onChanged: (String value) {},
                         ),
                         const SizedBox(
                           height: 24,
@@ -58,9 +52,7 @@ class ConfirmCodePage extends StatelessWidget {
                           width: 210,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed("/profile");
-                            },
+                            onPressed: () {},
                             child: const Text('Confirm Email',
                                 style: TextStyle(fontSize: 18)),
                           ),

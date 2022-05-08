@@ -1,4 +1,5 @@
-import 'package:digital_queue/models/user.dart';
+import 'dart:io';
+
 import 'package:digital_queue/services/error_result.dart';
 import 'package:digital_queue/services/profile_result.dart';
 import 'package:dio/dio.dart';
@@ -15,30 +16,55 @@ abstract class ApiResult {
 
 class OkResult extends ApiResult {}
 
+class ApiClientInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    super.onRequest(options, handler);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    super.onResponse(response, handler);
+  }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) {
+    final response = err.response;
+
+    if (response!.data != "") {
+      response.data = ErrorResult(
+        message: response.data['message'] ?? err.message,
+      );
+
+      handler.resolve(response);
+      return;
+    }
+
+    response.data = ErrorResult(
+      message: err.message,
+    );
+
+    handler.resolve(response);
+  }
+}
+
 class ApiClient {
   final baseUrl = 'http://10.0.2.2:5241/api';
   late Dio client;
 
   Future<ApiResult> initialize() async {
     client = Dio(BaseOptions(baseUrl: baseUrl));
+    client.interceptors.add(ApiClientInterceptor());
 
     var response = await client.get(
       "/",
     );
 
     if (response.statusCode != 200) {
-      return ErrorResult(
-        message: getError(
-          response,
-        ),
-      );
+      return response.data as ErrorResult;
     }
 
-    return OkResult();
-  }
-
-  String getError(Response response) {
-    return response.data["message"] ?? "Something went wrong.";
+    return ApiResult.ok();
   }
 
   Future<ApiResult> authenticate(String email) async {
@@ -59,54 +85,53 @@ class ApiClient {
       return AuthenticationStatus();
     }
 
-    return ErrorResult(
-      message: getError(
-        response,
-      ),
-    );
+    return response.data as ErrorResult;
   }
 
-  Future<ApiResult> verifyAuthenticationCode(String email, String code) async {
+  Future<ApiResult> verifyAuthenticationCode({
+    required String email,
+    required String code,
+    String? deviceToken,
+  }) async {
     var body = {
       "email": email,
-      "token": code,
+      "code": code,
     };
 
     var response = await client.post(
       "/accounts/verify-authentication",
       data: body,
-    );
-
-    if (response.statusCode != 200) {
-      // TODO:
-      return ErrorResult(
-        message: getError(
-          response,
-        ),
-      );
-    }
-
-    return AuthenticationResult(
-      response.data.accessToken,
-      response.data.refreshToken,
-    );
-  }
-
-  Future<ApiResult> getProfile({required String accessToken}) async {
-    var response = await client.get(
-      "/accounts/get-profile",
       options: Options(
-        headers: {"Authorization": "Bearer ${accessToken}"},
+        headers: {
+          "X-Device-Token": deviceToken,
+        },
       ),
     );
 
     if (response.statusCode != 200) {
-      // TODO:
-      return ErrorResult(
-        message: getError(
-          response,
-        ),
-      );
+      return response.data;
+    }
+
+    return AuthenticationResult(
+      response.data['accessToken'],
+      response.data['refreshToken'],
+    );
+  }
+
+  Future<ApiResult> getProfile({
+    required String accessToken,
+  }) async {
+    var response = await client.get(
+      "/accounts/get-profile",
+      options: Options(
+        headers: {
+          "authorization": 'Bearer $accessToken',
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
     }
 
     return ProfileResult(
@@ -115,5 +140,49 @@ class ApiClient {
       email: response.data["email"],
       createAt: response.data["createdAt"],
     );
+  }
+
+  Future<ApiResult?> refreshSession({
+    required String refreshToken,
+  }) async {
+    final response = await client.patch<AuthenticationResult>(
+      "/sessions/refresh-session",
+      data: {
+        "token": refreshToken,
+      },
+      options: Options(),
+    );
+
+    return response.data;
+  }
+
+  Future<ApiResult?> terminateSession({
+    required String accessToken,
+  }) async {
+    final response = await client.post("/sessions/terminate-session",
+        options: Options(headers: {
+          "Authorization": "Bearer $accessToken",
+        }));
+
+    return response.data;
+  }
+
+  Future<ApiResult> setName({
+    required String name,
+    required String accessToken,
+  }) async {
+    final response = await client.patch(
+      "/accounts/set-name",
+      data: {
+        "name": name,
+      },
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ),
+    );
+
+    return response.data;
   }
 }
