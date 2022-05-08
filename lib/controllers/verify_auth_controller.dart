@@ -1,9 +1,15 @@
-import 'package:digital_queue/controllers/auth_controller.dart';
+import 'package:digital_queue/services/authentication_result.dart';
 import 'package:digital_queue/services/error_result.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
-class VerifyAuthController extends AuthController {
+import '../services/api_client.dart';
+
+class VerifyAuthController extends GetxController {
+  final apiClient = Get.find<ApiClient>();
+  final storage = const FlutterSecureStorage();
+
   late final TextEditingController _codeTextController;
 
   @override
@@ -23,24 +29,36 @@ class VerifyAuthController extends AuthController {
   }
 
   Future verifyAuthCode() async {
-    final email = Get.parameters["email"]!;
-    final status = Get.parameters["status"]!;
+    final email = Get.arguments["email"]!;
+    final status = Get.arguments["status"]!;
     final code = codeTextController.value.text;
 
     final result = await apiClient.verifyAuthenticationCode(
-      email,
-      code,
+      email: email,
+      code: code,
     );
 
     if (result is ErrorResult) {
-      // TODO: show error
+      // TODO: show error popup
       return;
     }
 
     // TODO: populate a user object
 
+    // TODO: add firebase token for FCM use case
+    // await storage.write(key: "user_device_token", value: "");
+
+    final auth = result as AuthenticationResult;
+    await storage.write(key: "user_access_token", value: auth.accessToken);
+    await storage.write(key: "user_refresh_token", value: auth.refreshToken);
+    await storage.write(key: "user_email", value: email);
+
     if (status == "created") {
-      Get.toNamed("/setName");
+      Get.toNamed("/setName", arguments: {
+        "email": email,
+      });
+
+      // TODO: ???
       return;
     }
 

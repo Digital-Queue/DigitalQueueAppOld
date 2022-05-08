@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // controller.initialize();
+    controller.initialize();
 
     return Scaffold(
       appBar: AppBar(

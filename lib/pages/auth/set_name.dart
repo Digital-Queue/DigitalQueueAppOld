@@ -54,8 +54,8 @@ class SetNamePage extends StatelessWidget {
                     width: 192,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Get.offNamed("/queue");
+                      onPressed: () async {
+                        await controller.setName();
                       },
                       child: const Text(
                         'Continue',

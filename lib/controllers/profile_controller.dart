@@ -1,13 +1,32 @@
+import 'package:digital_queue/services/api_client.dart';
+import 'package:digital_queue/services/error_result.dart';
+import 'package:digital_queue/services/profile_result.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
-  var name = "John Doe".obs;
-  var email = "john.doe@mail.com".obs;
-  var emailConfirmed = false.obs;
-  var confirmEmailCode = "".obs;
+  final storage = const FlutterSecureStorage();
+  final apiClient = Get.find<ApiClient>();
 
-  void initialize() {
-    // TODO: fetch profile
+  var name = "".obs;
+  var email = "".obs;
+
+  Future initialize() async {
+    final accessToken = await storage.read(key: "user_access_token");
+
+    if (accessToken == null) {
+      throw Error();
+    }
+
+    final result = await apiClient.getProfile(accessToken: accessToken);
+
+    if (result is ErrorResult) {
+      throw Error();
+    }
+
+    final profile = result as ProfileResult;
+    name.value = profile.name;
+    email.value = profile.email;
   }
 
   void changeEmail() {}

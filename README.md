@@ -13,3 +13,5 @@ Digital Queue mobile application.
 - https://iconscout.com/illustration/attract-users-2061895
 
 - https://iconscout.com/illustration/get-newsletter-updates-4602686
+
+- https://iconscout.com/icon/user-2631165

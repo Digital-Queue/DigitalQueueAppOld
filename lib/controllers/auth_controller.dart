@@ -4,9 +4,11 @@ import 'package:digital_queue/services/api_client.dart';
 import 'package:digital_queue/services/authentication_result.dart';
 import 'package:digital_queue/services/error_result.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
+  final storage = const FlutterSecureStorage();
   final apiClient = Get.find<ApiClient>();
 
   late final TextEditingController _emailTextController;
@@ -35,14 +37,14 @@ class AuthController extends GetxController {
     );
 
     if (signInResponse is ErrorResult) {
-      log("login failed: ${signInResponse.message}");
-      return null;
+      // TODO: show error popup
+      return;
     }
 
     final authResult = signInResponse as AuthenticationStatus;
-    final status = authResult.created ? "created" : "logged-in";
+    final status = authResult.created ? "created" : "returning";
 
-    Get.offNamed(
+    Get.toNamed(
       "/verifyAuth",
       arguments: {
         // `created` flag is need to determine if we should

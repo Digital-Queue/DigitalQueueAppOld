@@ -1,6 +1,12 @@
 class User {
-  final String? name;
-  final String email;
+  late String id;
+  late String name;
+  late String email;
+  late String deviceToken;
+  late String accessToken;
+  late String refreshToken;
 
-  User({this.name, required this.email});
+  User({
+    required this.deviceToken,
+  });
 }
