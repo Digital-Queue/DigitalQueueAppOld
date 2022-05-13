@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:digital_queue/services/error_result.dart';
-import 'package:digital_queue/services/profile_result.dart';
+import 'package:digital_queue/services/dtos/error_result.dart';
+import 'package:digital_queue/services/dtos/profile_result.dart';
 import 'package:dio/dio.dart';
 
-import 'authentication_result.dart';
+import 'dtos/authentication_result.dart';
 
 abstract class ApiResult {
   // TODO: marker abstract class
@@ -145,7 +145,7 @@ class ApiClient {
   Future<ApiResult?> refreshSession({
     required String refreshToken,
   }) async {
-    final response = await client.patch<AuthenticationResult>(
+    final response = await client.patch(
       "/sessions/refresh-session",
       data: {
         "token": refreshToken,
@@ -153,7 +153,11 @@ class ApiClient {
       options: Options(),
     );
 
-    return response.data;
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
+    }
+
+    return response.data as AuthenticationResult;
   }
 
   Future<ApiResult?> terminateSession({
@@ -164,7 +168,11 @@ class ApiClient {
           "Authorization": "Bearer $accessToken",
         }));
 
-    return response.data;
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
+    }
+
+    return ApiResult.ok();
   }
 
   Future<ApiResult> setName({
@@ -183,6 +191,10 @@ class ApiClient {
       ),
     );
 
-    return response.data;
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
+    }
+
+    return ApiResult.ok();
   }
 }
