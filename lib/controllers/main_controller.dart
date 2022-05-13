@@ -1,13 +1,17 @@
 import 'dart:developer';
 
 import 'package:digital_queue/services/api_client.dart';
-import 'package:digital_queue/services/error_result.dart';
+import 'package:digital_queue/services/dtos/authentication_result.dart';
+import 'package:digital_queue/services/dtos/error_result.dart';
+import 'package:digital_queue/services/user_service.dart';
 import 'package:get/get.dart';
 
 import '../models/user.dart';
+import '../services/user_service.dart';
 
 class MainController extends GetxController {
   final apiClient = Get.put(ApiClient());
+  final userService = Get.put(UserService());
 
   Future initialize() async {
     await Future.delayed(
@@ -22,17 +26,36 @@ class MainController extends GetxController {
     }
 
     log("Digital Queue Service OK");
+
+    return await _getCurrentUser();
   }
 
-  Future<User?> getCurrentUser() async {
+  Future<User?> _getCurrentUser() async {
     // find any existing user data
+    final currentUser = await userService.getUser();
 
-    if (true) {
-      // TODO: return nothing
+    if (currentUser == null) {
+      // new user, fresh start
       return null;
     }
 
-    // TODO: return User instance
-    return null;
+    // verify session tokens
+    final response = await apiClient.refreshSession(
+      refreshToken: currentUser.refreshToken!,
+    );
+
+    if (response is ErrorResult) {
+      return null;
+    }
+
+    final auth = response as AuthenticationResult;
+    await userService.saveUser(
+      User(
+        refreshToken: auth.refreshToken,
+        accessToken: auth.accessToken,
+      ),
+    );
+
+    return await userService.getUser();
   }
 }

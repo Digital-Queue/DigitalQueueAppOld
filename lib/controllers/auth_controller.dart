@@ -1,14 +1,11 @@
-import 'dart:developer';
-
 import 'package:digital_queue/services/api_client.dart';
-import 'package:digital_queue/services/authentication_result.dart';
-import 'package:digital_queue/services/error_result.dart';
+import 'package:digital_queue/services/dtos/authentication_result.dart';
+import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  final storage = const FlutterSecureStorage();
   final apiClient = Get.find<ApiClient>();
 
   late final TextEditingController _emailTextController;
