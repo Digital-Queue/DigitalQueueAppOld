@@ -3,7 +3,6 @@ import 'package:digital_queue/services/api_client.dart';
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class SetNameController extends GetxController {

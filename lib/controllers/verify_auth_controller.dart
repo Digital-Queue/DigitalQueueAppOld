@@ -29,6 +29,11 @@ class VerifyAuthController extends GetxController {
     return _codeTextController;
   }
 
+  var _isLoggingIn = false.obs;
+  bool get isLoggingIn {
+    return _isLoggingIn.value;
+  }
+
   Future verifyAuthCode() async {
     final email = Get.arguments["email"]!;
     final status = Get.arguments["status"]!;

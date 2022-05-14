@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/dtos/profile_result.dart';
@@ -30,6 +29,7 @@ class ApiClientInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
+    log(err.message, stackTrace: err.stackTrace);
     handler.resolve(
       Response(
         requestOptions: err.requestOptions,

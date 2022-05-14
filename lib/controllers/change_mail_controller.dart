@@ -67,6 +67,19 @@ class ChangeEmailController extends GetxController {
     );
 
     if (response is ErrorResult) {
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${response.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
       return;
     }
 
