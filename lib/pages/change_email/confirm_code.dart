@@ -1,7 +1,11 @@
+import 'package:digital_queue/controllers/change_mail_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 
 class ConfirmCodePage extends StatelessWidget {
-  const ConfirmCodePage({Key? key}) : super(key: key);
+  ConfirmCodePage({Key? key}) : super(key: key);
+
+  final controller = Get.put(ChangeEmailController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,7 @@ class ConfirmCodePage extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: controller.codeTextController,
                           autocorrect: false,
                           enableSuggestions: false,
                           keyboardType: TextInputType.number,
@@ -52,7 +57,8 @@ class ConfirmCodePage extends StatelessWidget {
                           width: 210,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async =>
+                                await controller.verifyCode(),
                             child: const Text('Confirm Email',
                                 style: TextStyle(fontSize: 18)),
                           ),

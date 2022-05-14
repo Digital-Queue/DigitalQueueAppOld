@@ -118,7 +118,7 @@ class ProfileWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Get.toNamed("/changeEmail");
+                controller.changeEmail();
               },
               child: const Text(
                 "Change Email",

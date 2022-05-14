@@ -198,4 +198,52 @@ class ApiClient {
 
     return ApiResult.ok();
   }
+
+  Future<ApiResult> requestChangeEmailCode({
+    required String email,
+    required String accessToken,
+  }) async {
+    final response = await client.post(
+      "/accounts/request-email-change",
+      data: {
+        "email": email,
+      },
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ),
+    );
+
+    if (response.statusCode != 204) {
+      return response.data as ErrorResult;
+    }
+
+    return ApiResult.ok();
+  }
+
+  Future<ApiResult> verifyChangeEmailCode({
+    required String email,
+    required String code,
+    required String accessToken,
+  }) async {
+    final response = await client.patch(
+      "/accounts/change-email",
+      data: {
+        "email": email,
+        "token": code,
+      },
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
+    }
+
+    return ApiResult.ok();
+  }
 }
