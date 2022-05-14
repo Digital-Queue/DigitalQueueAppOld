@@ -4,6 +4,7 @@ import 'package:digital_queue/services/api_client.dart';
 import 'package:digital_queue/services/dtos/authentication_result.dart';
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/user_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../models/user.dart';
@@ -19,13 +20,24 @@ class MainController extends GetxController {
     );
 
     // check if service is available
-    var response = await apiClient.initialize();
+    final response = await apiClient.initialize();
+    log("Digital Queue Service OK");
 
     if (response is ErrorResult) {
-      return;
+      Get.dialog(
+        AlertDialog(
+          content: const Text(
+            "Unable to connect to remote server",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
     }
-
-    log("Digital Queue Service OK");
 
     return await _getCurrentUser();
   }

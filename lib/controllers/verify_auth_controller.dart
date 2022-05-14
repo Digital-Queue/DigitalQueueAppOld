@@ -1,16 +1,29 @@
-import 'package:digital_queue/services/authentication_result.dart';
-import 'package:digital_queue/services/error_result.dart';
+import 'package:digital_queue/services/dtos/authentication_result.dart';
+import 'package:digital_queue/services/dtos/error_result.dart';
+import 'package:digital_queue/services/user_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
+import '../models/user.dart';
 import '../services/api_client.dart';
 
 class VerifyAuthController extends GetxController {
   final apiClient = Get.find<ApiClient>();
-  final storage = const FlutterSecureStorage();
+  final userService = Get.find<UserService>();
 
-  late final TextEditingController _codeTextController;
+  VerifyAuthController() {
+    // Init firebase token change notifier
+    FirebaseMessaging.instance.onTokenRefresh.listen(
+      (token) async {
+        await userService.saveUser(
+          User(
+            deviceToken: token,
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void onInit() {
@@ -24,6 +37,7 @@ class VerifyAuthController extends GetxController {
     super.dispose();
   }
 
+  late final TextEditingController _codeTextController;
   TextEditingController get codeTextController {
     return _codeTextController;
   }
@@ -33,25 +47,41 @@ class VerifyAuthController extends GetxController {
     final status = Get.arguments["status"]!;
     final code = codeTextController.value.text;
 
+    // add firebase token for FCM use case
+    final deviceToken = await FirebaseMessaging.instance.getToken();
+
     final result = await apiClient.verifyAuthenticationCode(
       email: email,
       code: code,
+      deviceToken: deviceToken,
     );
 
     if (result is ErrorResult) {
-      // TODO: show error popup
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${result.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
       return;
     }
 
-    // TODO: populate a user object
-
-    // TODO: add firebase token for FCM use case
-    // await storage.write(key: "user_device_token", value: "");
-
     final auth = result as AuthenticationResult;
-    await storage.write(key: "user_access_token", value: auth.accessToken);
-    await storage.write(key: "user_refresh_token", value: auth.refreshToken);
-    await storage.write(key: "user_email", value: email);
+    await userService.saveUser(
+      User(
+        accessToken: auth.accessToken,
+        refreshToken: auth.refreshToken,
+        email: email,
+        deviceToken: deviceToken,
+      ),
+    );
 
     if (status == "created") {
       Get.toNamed("/setName", arguments: {

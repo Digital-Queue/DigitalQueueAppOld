@@ -1,11 +1,13 @@
+import 'package:digital_queue/models/user.dart';
 import 'package:digital_queue/services/api_client.dart';
-import 'package:digital_queue/services/error_result.dart';
+import 'package:digital_queue/services/dtos/error_result.dart';
+import 'package:digital_queue/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class SetNameController extends GetxController {
-  final storage = const FlutterSecureStorage();
+  final userService = Get.find<UserService>();
   final apiClient = Get.find<ApiClient>();
   late final TextEditingController _nameTextController;
 
@@ -27,18 +29,48 @@ class SetNameController extends GetxController {
 
   Future setName() async {
     final name = _nameTextController.value.text;
-    final accessToken = await storage.read(key: "user_access_token");
+    final user = await userService.saveUser(
+      User(
+        name: name,
+      ),
+    );
 
-    if (accessToken == null) {
-      // TODO: show error popup
+    if (user == null) {
+      Get.dialog(
+        AlertDialog(
+          content: const Text(
+            "Something went wrong",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
       return;
     }
 
-    final response =
-        await apiClient.setName(name: name, accessToken: accessToken);
+    final response = await apiClient.setName(
+      name: name,
+      accessToken: user.accessToken!,
+    );
 
     if (response is ErrorResult) {
-      // TODO: show error popup
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${response.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
       return;
     }
 

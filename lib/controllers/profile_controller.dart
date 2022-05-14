@@ -1,35 +1,80 @@
+import 'package:digital_queue/models/user.dart';
 import 'package:digital_queue/services/api_client.dart';
-import 'package:digital_queue/services/error_result.dart';
-import 'package:digital_queue/services/profile_result.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:digital_queue/services/dtos/error_result.dart';
+import 'package:digital_queue/services/dtos/profile_result.dart';
+import 'package:digital_queue/services/user_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
-  final storage = const FlutterSecureStorage();
+  final userService = Get.find<UserService>();
   final apiClient = Get.find<ApiClient>();
 
   var name = "".obs;
   var email = "".obs;
 
   Future initialize() async {
-    final accessToken = await storage.read(key: "user_access_token");
+    final user = await userService.getUser();
 
-    if (accessToken == null) {
-      throw Error();
+    if (user == null) {
+      Get.dialog(
+        AlertDialog(
+          content: const Text(
+            "Something went wrong",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+
+      return;
     }
 
-    final result = await apiClient.getProfile(accessToken: accessToken);
+    final response = await apiClient.getProfile(accessToken: user.accessToken!);
 
-    if (result is ErrorResult) {
-      throw Error();
+    if (response is ErrorResult) {
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${response.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+
+      return;
     }
 
-    final profile = result as ProfileResult;
+    final profile = response as ProfileResult;
+    await userService.saveUser(
+      User(
+        id: profile.id,
+        name: profile.name,
+        email: profile.email,
+      ),
+    );
     name.value = profile.name;
     email.value = profile.email;
   }
 
   void changeEmail() {}
 
-  void exit() {}
+  Future exit() async {
+    final user = await userService.getUser();
+    if (user != null) {
+      await apiClient.terminateSession(accessToken: user.accessToken!);
+    }
+    await userService.clearUser();
+
+    Get.offNamed("/auth");
+  }
 }
