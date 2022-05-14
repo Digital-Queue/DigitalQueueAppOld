@@ -137,13 +137,18 @@ class ApiClient {
 
   Future<ApiResult?> refreshSession({
     required String refreshToken,
+    String? deviceToken,
   }) async {
     final response = await client.patch(
       "/sessions/refresh-session",
       data: {
         "token": refreshToken,
       },
-      options: Options(),
+      options: Options(
+        headers: {
+          "X-Device-Token": deviceToken,
+        },
+      ),
     );
 
     if (response.statusCode != 200) {

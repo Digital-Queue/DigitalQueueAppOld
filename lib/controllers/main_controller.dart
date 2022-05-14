@@ -4,6 +4,7 @@ import 'package:digital_queue/services/api_client.dart';
 import 'package:digital_queue/services/dtos/authentication_result.dart';
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/user_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -51,9 +52,13 @@ class MainController extends GetxController {
       return null;
     }
 
+    // add firebase token for FCM use case
+    final deviceToken = await FirebaseMessaging.instance.getToken();
+
     // verify session tokens
     final response = await apiClient.refreshSession(
       refreshToken: currentUser.refreshToken!,
+      deviceToken: deviceToken,
     );
 
     if (response is ErrorResult) {
@@ -65,6 +70,7 @@ class MainController extends GetxController {
       User(
         refreshToken: auth.refreshToken,
         accessToken: auth.accessToken,
+        deviceToken: deviceToken,
       ),
     );
 

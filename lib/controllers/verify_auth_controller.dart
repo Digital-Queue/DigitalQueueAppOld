@@ -12,19 +12,6 @@ class VerifyAuthController extends GetxController {
   final apiClient = Get.find<ApiClient>();
   final userService = Get.find<UserService>();
 
-  VerifyAuthController() {
-    // Init firebase token change notifier
-    FirebaseMessaging.instance.onTokenRefresh.listen(
-      (token) async {
-        await userService.saveUser(
-          User(
-            deviceToken: token,
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void onInit() {
     _codeTextController = TextEditingController();
