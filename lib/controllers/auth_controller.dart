@@ -2,12 +2,12 @@ import 'package:digital_queue/services/api_client.dart';
 import 'package:digital_queue/services/dtos/authentication_result.dart';
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   final apiClient = Get.find<ApiClient>();
 
+  final _isProcessing = false.obs();
   late final TextEditingController _emailTextController;
 
   @override
@@ -34,7 +34,19 @@ class AuthController extends GetxController {
     );
 
     if (signInResponse is ErrorResult) {
-      // TODO: show error popup
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${signInResponse.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
       return;
     }
 

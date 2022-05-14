@@ -45,31 +45,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         scaffoldBackgroundColor: Colors.indigo[50],
       ),
-      home: FutureBuilder(
-        future: controller.initialize(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              if (snapshot.data == null) {
-                // we do not have user data, user needs to
-                // authenticate.
-                return AuthPage();
-              }
-
-              // We have a user, go to profile view.
-              return ProfilePage();
-
-            default:
-              return Scaffold(
-                body: Center(
-                  child: SvgPicture.asset(
-                    "assets/logo.svg",
-                  ),
-                ),
-              );
-          }
-        },
-      ),
+      home: _showStartScreen(),
       getPages: [
         GetPage(
           name: "/auth",
@@ -101,6 +77,38 @@ class MyApp extends StatelessWidget {
         )
       ],
       initialBinding: ApplicationBindings(),
+    );
+  }
+
+  FutureBuilder<dynamic> _showStartScreen() {
+    return FutureBuilder(
+      future: controller.initialize(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            // We have a user, go to profile view.
+            if (snapshot.data is User) {
+              return ProfilePage();
+            }
+
+            // we do not have user data, user needs to
+            // authenticate.
+            return AuthPage();
+
+          default:
+            return _showSplashScreen();
+        }
+      },
+    );
+  }
+
+  Scaffold _showSplashScreen() {
+    return Scaffold(
+      body: Center(
+        child: SvgPicture.asset(
+          "assets/logo.svg",
+        ),
+      ),
     );
   }
 }
