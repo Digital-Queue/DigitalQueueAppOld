@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 class AuthController extends GetxController {
   final apiClient = Get.find<ApiClient>();
 
-  final _isProcessing = false.obs();
   late final TextEditingController _emailTextController;
 
   @override
