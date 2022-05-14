@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1003920885591",
+    "project_id": "digital-queue-f565e",
+    "storage_bucket": "digital-queue-f565e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003920885591:android:9c13c3382d3076d714e012",
+        "android_client_info": {
+          "package_name": "com.example.digital_queue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003920885591-s1vo765r9ep75jompc8mgnrq0k9qrs7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk5wW9J5odCa0s1h3Mpq_z2IYiawP2-MY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003920885591-s1vo765r9ep75jompc8mgnrq0k9qrs7v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
