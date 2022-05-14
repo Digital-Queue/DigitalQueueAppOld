@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/dtos/profile_result.dart';
@@ -29,22 +30,14 @@ class ApiClientInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    final response = err.response;
-
-    if (response!.data != "") {
-      response.data = ErrorResult(
-        message: response.data['message'] ?? err.message,
-      );
-
-      handler.resolve(response);
-      return;
-    }
-
-    response.data = ErrorResult(
-      message: err.message,
+    handler.resolve(
+      Response(
+        requestOptions: err.requestOptions,
+        data: ErrorResult(
+          message: err.message,
+        ),
+      ),
     );
-
-    handler.resolve(response);
   }
 }
 
@@ -157,7 +150,10 @@ class ApiClient {
       return response.data as ErrorResult;
     }
 
-    return response.data as AuthenticationResult;
+    return AuthenticationResult(
+      response.data['accessToken'],
+      response.data['refreshToken'],
+    );
   }
 
   Future<ApiResult?> terminateSession({
@@ -168,7 +164,7 @@ class ApiClient {
           "Authorization": "Bearer $accessToken",
         }));
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 204) {
       return response.data as ErrorResult;
     }
 
@@ -191,7 +187,7 @@ class ApiClient {
       ),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 204) {
       return response.data as ErrorResult;
     }
 
