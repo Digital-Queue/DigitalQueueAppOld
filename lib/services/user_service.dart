@@ -27,7 +27,7 @@ class UserService {
     );
   }
 
-  Future saveUser(User user) async {
+  Future<User?> saveUser(User user) async {
     if (user.accessToken != null) {
       await storage.write(key: 'user_access_token', value: user.accessToken);
     }
@@ -47,5 +47,19 @@ class UserService {
     if (user.id != null) {
       await storage.write(key: 'user_id', value: user.id);
     }
+
+    if (user.name != null) {
+      await storage.write(key: 'user_name', value: user.name);
+    }
+
+    return await getUser();
+  }
+
+  Future clearUser() async {
+    await storage.write(key: 'user_access_token', value: null);
+    await storage.write(key: 'user_refresh_token', value: null);
+    await storage.write(key: 'user_id', value: null);
+    await storage.write(key: 'user_email', value: null);
+    await storage.write(key: 'user_device_token', value: null);
   }
 }
