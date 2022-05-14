@@ -1,9 +1,12 @@
+import 'package:digital_queue/controllers/change_mail_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class ChangeEmailPage extends StatelessWidget {
-  const ChangeEmailPage({Key? key}) : super(key: key);
+  ChangeEmailPage({Key? key}) : super(key: key);
+
+  final controller = Get.put(ChangeEmailController());
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class ChangeEmailPage extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
-                          // controller:
+                          controller: controller.emailTextController,
                           autocorrect: false,
                           enableSuggestions: false,
                           keyboardType: TextInputType.emailAddress,
@@ -54,9 +57,7 @@ class ChangeEmailPage extends StatelessWidget {
                           width: 210,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed("/confirmCode");
-                            },
+                            onPressed: () async => await controller.sendCode(),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: const [

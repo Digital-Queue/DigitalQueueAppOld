@@ -66,7 +66,9 @@ class ProfileController extends GetxController {
     email.value = profile.email;
   }
 
-  void changeEmail() {}
+  void changeEmail() {
+    Get.toNamed("/changeEmail");
+  }
 
   Future exit() async {
     final user = await userService.getUser();
