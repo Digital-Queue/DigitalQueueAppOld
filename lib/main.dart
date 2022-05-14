@@ -9,7 +9,9 @@ import 'package:digital_queue/pages/auth/profile.dart';
 import 'package:digital_queue/pages/change_email/change_email.dart';
 import 'package:digital_queue/pages/change_email/confirm_code.dart';
 import 'package:digital_queue/pages/queue/queue.dart';
+import 'package:digital_queue/services/user_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,25 @@ import 'package:get/get.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Init firebase token change notifier
+  FirebaseMessaging.instance.onTokenRefresh.listen(
+    (token) async {
+      final userService = Get.put(
+        UserService(),
+      );
+      await userService.saveUser(
+        User(
+          deviceToken: token,
+        ),
+      );
+    },
+  );
+
   runApp(MyApp());
 }
 
