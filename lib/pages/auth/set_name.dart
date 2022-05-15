@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class SetNamePage extends StatelessWidget {
   SetNamePage({Key? key}) : super(key: key);
 
-  final controller = Get.find<SetNameController>();
+  final controller = Get.put(SetNameController());
   var _isProcessing = false.obs;
 
   @override
