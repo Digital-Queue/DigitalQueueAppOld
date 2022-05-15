@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class VerifyAuthPage extends StatelessWidget {
   VerifyAuthPage({Key? key}) : super(key: key);
 
-  final controller = Get.find<VerifyAuthController>();
+  final controller = Get.put(VerifyAuthController());
   var _isLoggingIn = false.obs;
 
   @override
