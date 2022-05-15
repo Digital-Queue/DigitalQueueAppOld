@@ -42,7 +42,7 @@ class AuthPage extends StatelessWidget {
                         return const LoadingWidget();
                       }
 
-                      return _showAuth();
+                      return _showAuthWidget();
                     }),
                   ),
                 ),
@@ -54,7 +54,7 @@ class AuthPage extends StatelessWidget {
     );
   }
 
-  Column _showAuth() {
+  Column _showAuthWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
