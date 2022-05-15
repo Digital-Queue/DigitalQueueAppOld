@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:digital_queue/bindings/application_binding.dart';
 import 'package:digital_queue/controllers/main_controller.dart';
 import 'package:digital_queue/firebase_options.dart';
@@ -8,6 +10,7 @@ import 'package:digital_queue/pages/auth/verify_auth.dart';
 import 'package:digital_queue/pages/auth/profile.dart';
 import 'package:digital_queue/pages/change_email/change_email.dart';
 import 'package:digital_queue/pages/change_email/confirm_code.dart';
+import 'package:digital_queue/pages/queue/create_queue_item.dart';
 import 'package:digital_queue/pages/queue/queue.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -92,7 +95,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: "/queue",
           page: () => QueuePage(),
-        )
+        ),
+        GetPage(
+          name: "/create",
+          page: () => CreateQueueItemPage(),
+        ),
       ],
       initialBinding: ApplicationBindings(),
     );
@@ -106,7 +113,8 @@ class MyApp extends StatelessWidget {
           case ConnectionState.done:
             // We have a user, go to profile view.
             if (snapshot.data is User) {
-              return ProfilePage();
+              log(snapshot.data.accessToken);
+              return QueuePage();
             }
 
             // we do not have user data, user needs to
