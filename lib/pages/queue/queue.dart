@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/queue_controller.dart';
 
 class QueuePage extends StatelessWidget {
-  const QueuePage({Key? key}) : super(key: key);
+  QueuePage({Key? key}) : super(key: key);
+
+  final QueueController controller = Get.put(QueueController());
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,14 @@ class QueuePage extends StatelessWidget {
         ],
       ),
       body: Container(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Get.toNamed("/create");
+        },
+        backgroundColor: Colors.indigo,
+        icon: const Icon(Icons.create),
+        label: Text("Create"),
+      ),
     );
   }
 }

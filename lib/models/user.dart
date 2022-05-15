@@ -6,11 +6,12 @@ class User {
   late String? accessToken;
   late String? refreshToken;
 
-  User(
-      {this.id,
-      this.email,
-      this.name,
-      this.deviceToken,
-      this.accessToken,
-      this.refreshToken});
+  User({
+    this.id,
+    this.email,
+    this.name,
+    this.deviceToken,
+    this.accessToken,
+    this.refreshToken,
+  });
 }

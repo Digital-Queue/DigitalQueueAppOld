@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:digital_queue/services/dtos/course.dart';
 import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/dtos/profile_result.dart';
 import 'package:dio/dio.dart';
@@ -233,6 +234,70 @@ class ApiClient {
         "email": email,
         "token": code,
       },
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
+    }
+
+    return ApiResult.ok();
+  }
+
+  Future<List<Course>> searchCourse({
+    required String query,
+    required String accessToken,
+  }) async {
+    final response = await client.get(
+      "/courses?q=$query",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      return List.empty();
+    }
+
+    final list = response.data as Iterable;
+    final courses = list.map((e) => Course.fromJson(e));
+
+    return courses.toList();
+  }
+
+  Future<ApiResult> sendCourseRequest({
+    required String courseId,
+    required String accessToken,
+  }) async {
+    final response = await client.post(
+      "/courses/create-request",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      return response.data as ErrorResult;
+    }
+
+    return ApiResult.ok();
+  }
+
+  Future<ApiResult> completeCourseRequest({
+    required String courseId,
+    required String requestId,
+    required String accessToken,
+  }) async {
+    final response = await client.post(
+      "/courses/complete-request",
       options: Options(
         headers: {
           "Authorization": "Bearer $accessToken",

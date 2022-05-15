@@ -41,6 +41,7 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   firebase_messaging: ^11.4.0
   firebase_core: ^1.17.0
+  flutter_typeahead: ^3.2.5
 
 dev_dependencies:
   flutter_test:
