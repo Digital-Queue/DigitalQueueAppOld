@@ -1,10 +1,11 @@
+import 'package:digital_queue/pages/queue/queue_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/queue_controller.dart';
 
-class QueuePage extends StatelessWidget {
-  QueuePage({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  MainPage({Key? key}) : super(key: key);
 
   final QueueController controller = Get.put(QueueController());
 
@@ -25,14 +26,11 @@ class QueuePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Get.toNamed("/create");
+      body: FutureBuilder(
+        future: controller.isTeacher(),
+        builder: (context, snapshot) {
+          return QueueWidget();
         },
-        backgroundColor: Colors.indigo,
-        icon: const Icon(Icons.create),
-        label: Text("Create"),
       ),
     );
   }

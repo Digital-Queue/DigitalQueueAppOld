@@ -1,5 +1,5 @@
 import 'package:digital_queue/controllers/queue_controller.dart';
-import 'package:digital_queue/services/courses_service.dart';
+import 'package:digital_queue/services/queue_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
