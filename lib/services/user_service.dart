@@ -1,65 +1,204 @@
+import 'dart:developer';
+
 import 'package:digital_queue/models/user.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:digital_queue/services/backend_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-class UserService {
-  final storage = const FlutterSecureStorage();
+class UserService extends BackendService {
+  Future<BackendResponse?> initialize() async {
+    var response = await send(path: "/", method: "GET");
+    if (response.error == true) {
+      return response;
+    }
 
-  Future<User?> getUser() async {
-    final userAccessToken = await storage.read(key: 'user_access_token');
-    final userRefreshToken = await storage.read(key: 'user_refresh_token');
-
-    if (userAccessToken == null || userRefreshToken == null) {
+    // verify for any stored session
+    final accessToken = await cache.read(key: 'user_access_token');
+    final refreshToken = await cache.read(key: 'user_refresh_token');
+    if (accessToken == null || refreshToken == null) {
+      // session not found
       return null;
     }
 
-    final userId = await storage.read(key: 'user_id');
-    final userName = await storage.read(key: 'user_name');
-    final userEmail = await storage.read(key: 'user_email');
-    final userDeviceToken = await storage.read(key: 'user_device_token');
+    // firebase
+    var deviceToken = await cache.read(key: 'user_device_token');
+    deviceToken ??= await FirebaseMessaging.instance.getToken();
 
-    return User(
-      id: userId,
-      name: userName,
-      email: userEmail,
-      deviceToken: userDeviceToken,
-      accessToken: userAccessToken,
-      refreshToken: userRefreshToken,
+    // refresh found session
+    response = await refreshAuth(
+      refreshToken: refreshToken,
+      deviceToken: deviceToken,
     );
+
+    return response;
   }
 
-  Future<User?> saveUser(User user) async {
-    if (user.accessToken != null) {
-      await storage.write(key: 'user_access_token', value: user.accessToken);
+  Future<BackendResponse> refreshAuth({
+    required String refreshToken,
+    String? deviceToken,
+  }) async {
+    final response = await send(
+      path: "/sessions/refresh-session",
+      method: "PATCH",
+      data: {
+        "token": refreshToken,
+      },
+      headers: {
+        "X-Device-Token": deviceToken,
+      },
+    );
+
+    if (response.error == true) {
+      return response;
     }
 
-    if (user.refreshToken != null) {
-      await storage.write(key: 'user_refresh_token', value: user.refreshToken);
-    }
+    // update token
+    await cache.write(
+        key: 'user_access_token', value: response.data["accessToken"]);
+    await cache.write(
+        key: 'user_refresh_token', value: response.data["refreshToken"]);
 
-    if (user.email != null) {
-      await storage.write(key: 'user_email', value: user.email);
-    }
-
-    if (user.deviceToken != null) {
-      await storage.write(key: 'user_device_token', value: user.deviceToken);
-    }
-
-    if (user.id != null) {
-      await storage.write(key: 'user_id', value: user.id);
-    }
-
-    if (user.name != null) {
-      await storage.write(key: 'user_name', value: user.name);
-    }
-
-    return await getUser();
+    return response;
   }
 
-  Future clearUser() async {
-    await storage.write(key: 'user_access_token', value: null);
-    await storage.write(key: 'user_refresh_token', value: null);
-    await storage.write(key: 'user_id', value: null);
-    await storage.write(key: 'user_email', value: null);
-    await storage.write(key: 'user_device_token', value: null);
+  Future<BackendResponse> createAuth({required String email}) async {
+    final response = await send(
+      path: "/accounts/authenticate",
+      method: "POST",
+      data: {
+        "email": email,
+      },
+    );
+
+    return response;
+  }
+
+  Future<BackendResponse> verifyAuth({
+    required String email,
+    required String code,
+    String? deviceToken,
+  }) async {
+    var response = await send(
+      path: "/accounts/verify-authentication",
+      method: "POST",
+      data: {
+        "email": email,
+        "code": code,
+      },
+      headers: {
+        "X-Device-Token": deviceToken,
+      },
+    );
+
+    if (response.error == null) {
+      // update token
+      await cache.write(
+          key: 'user_access_token', value: response.data["accessToken"]);
+      await cache.write(
+          key: 'user_refresh_token', value: response.data["refreshToken"]);
+    }
+
+    return response;
+  }
+
+  Future<BackendResponse?> logout() async {
+    final accessToken = await cache.read(key: 'user_access_token');
+    BackendResponse? response;
+    try {
+      // delete remote session data
+      response = await send(
+        path: "/sessions/terminate-session",
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      );
+    } catch (error) {
+      log(error.toString());
+    }
+
+    // delete cache
+    await cache.deleteAll();
+
+    return response;
+  }
+
+  Future<BackendResponse> profile() async {
+    final accessToken = await cache.read(key: 'user_access_token');
+    final response = await send(
+      path: "/accounts/get-profile",
+      method: "GET",
+      headers: {
+        "authorization": 'Bearer $accessToken',
+      },
+    );
+
+    if (response.error == true) {
+      return response;
+    }
+
+    final refreshToken = await cache.read(key: 'user_refresh_token');
+    final deviceToken = await cache.read(key: 'user_device_token');
+
+    final user = User(
+      id: response.data["id"],
+      name: response.data["name"],
+      email: response.data["email"],
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      deviceToken: deviceToken,
+    );
+
+    return BackendResponse(data: user);
+  }
+
+  Future<BackendResponse> updateName({required String name}) async {
+    final accessToken = await cache.read(key: 'user_access_token');
+
+    final response = await send(
+      path: "/accounts/set-name",
+      method: "PATCH",
+      data: {
+        "name": name,
+      },
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
+
+    return response;
+  }
+
+  Future<BackendResponse> getChangeEmailToken({required String email}) async {
+    final accessToken = await cache.read(key: 'user_access_token');
+    final response = await send(
+      path: "/accounts/request-email-change",
+      method: "POST",
+      data: {
+        "email": email,
+      },
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
+
+    return response;
+  }
+
+  Future<BackendResponse> changeEmail(
+      {required String email, required String code}) async {
+    final accessToken = await cache.read(key: 'user_access_token');
+    final response = await send(
+      path: "/accounts/change-email",
+      method: "PATCH",
+      data: {
+        "email": email,
+        "token": code,
+      },
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
+
+    return response;
   }
 }

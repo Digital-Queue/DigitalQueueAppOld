@@ -17,16 +17,14 @@ class CreateQueueItemPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(
-          left: 8.0,
-          right: 8.0,
+          left: 16.0,
+          right: 16.0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
               child: Container(
-                //height: 200,
-                //width: 200,
                 alignment: Alignment.topCenter,
                 child: SvgPicture.asset(
                   "assets/queue_create.svg",

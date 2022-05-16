@@ -1,11 +1,9 @@
-import 'package:digital_queue/services/api_client.dart';
-import 'package:digital_queue/services/dtos/authentication_result.dart';
-import 'package:digital_queue/services/dtos/error_result.dart';
+import 'package:digital_queue/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  final apiClient = Get.find<ApiClient>();
+  final userService = Get.find<UserService>();
 
   late final TextEditingController _emailTextController;
 
@@ -28,15 +26,15 @@ class AuthController extends GetxController {
   Future authenticate() async {
     final email = emailTextController.value.text;
 
-    var signInResponse = await apiClient.authenticate(
-      email,
+    var response = await userService.createAuth(
+      email: email,
     );
 
-    if (signInResponse is ErrorResult) {
+    if (response == null) {
       Get.dialog(
         AlertDialog(
-          content: Text(
-            "Error: ${signInResponse.message}",
+          content: const Text(
+            "Unable to authenticate",
           ),
           actions: [
             TextButton(
@@ -49,9 +47,7 @@ class AuthController extends GetxController {
       return;
     }
 
-    final authResult = signInResponse as AuthenticationStatus;
-    final status = authResult.created ? "created" : "returning";
-
+    final status = response.statusCode == 201 ? "created" : "returning";
     Get.toNamed(
       "/verifyAuth",
       arguments: {
