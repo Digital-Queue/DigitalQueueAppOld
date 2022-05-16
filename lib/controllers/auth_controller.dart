@@ -30,7 +30,7 @@ class AuthController extends GetxController {
       email: email,
     );
 
-    if (response == null) {
+    if (response.error == true) {
       Get.dialog(
         AlertDialog(
           content: const Text(
