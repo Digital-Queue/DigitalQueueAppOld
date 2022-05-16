@@ -1,15 +1,9 @@
-import 'package:digital_queue/services/dtos/authentication_result.dart';
-import 'package:digital_queue/services/dtos/error_result.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../models/user.dart';
-import '../services/api_client.dart';
-
 class VerifyAuthController extends GetxController {
-  final apiClient = Get.find<ApiClient>();
   final userService = Get.find<UserService>();
 
   @override
@@ -42,17 +36,17 @@ class VerifyAuthController extends GetxController {
     // add firebase token for FCM use case
     final deviceToken = await FirebaseMessaging.instance.getToken();
 
-    final result = await apiClient.verifyAuthenticationCode(
+    final response = await userService.verifyAuth(
       email: email,
       code: code,
       deviceToken: deviceToken,
     );
 
-    if (result is ErrorResult) {
+    if (response.error == true) {
       Get.dialog(
         AlertDialog(
           content: Text(
-            "Error: ${result.message}",
+            "Error: ${response.message}",
           ),
           actions: [
             TextButton(
@@ -65,25 +59,16 @@ class VerifyAuthController extends GetxController {
       return;
     }
 
-    final auth = result as AuthenticationResult;
-    await userService.saveUser(
-      User(
-        accessToken: auth.accessToken,
-        refreshToken: auth.refreshToken,
-        email: email,
-        deviceToken: deviceToken,
-      ),
-    );
-
     if (status == "created") {
-      Get.toNamed("/setName", arguments: {
-        "email": email,
-      });
-
-      // TODO: ???
+      Get.toNamed(
+        "/setName",
+        arguments: {
+          "email": email,
+        },
+      );
       return;
     }
 
-    Get.offNamed("/profile");
+    Get.offNamed("/queue");
   }
 }

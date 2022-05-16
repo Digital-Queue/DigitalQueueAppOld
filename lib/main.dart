@@ -1,9 +1,6 @@
 import 'dart:developer';
 
-import 'package:digital_queue/bindings/application_binding.dart';
-import 'package:digital_queue/controllers/main_controller.dart';
 import 'package:digital_queue/firebase_options.dart';
-import 'package:digital_queue/models/user.dart';
 import 'package:digital_queue/pages/auth/auth.dart';
 import 'package:digital_queue/pages/auth/set_name.dart';
 import 'package:digital_queue/pages/auth/verify_auth.dart';
@@ -12,10 +9,12 @@ import 'package:digital_queue/pages/change_email/change_email.dart';
 import 'package:digital_queue/pages/change_email/confirm_code.dart';
 import 'package:digital_queue/pages/queue/create_queue_item.dart';
 import 'package:digital_queue/pages/queue/queue.dart';
+import 'package:digital_queue/services/backend_service.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,14 +29,8 @@ Future main() async {
   // Init firebase token change notifier
   FirebaseMessaging.instance.onTokenRefresh.listen(
     (token) async {
-      final userService = Get.put(
-        UserService(),
-      );
-      await userService.saveUser(
-        User(
-          deviceToken: token,
-        ),
-      );
+      final cache = const FlutterSecureStorage();
+      await cache.write(key: 'user_device_token', value: token);
     },
   );
 
@@ -47,7 +40,7 @@ Future main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  final controller = Get.put(MainController());
+  final userService = Get.put(UserService());
 
   // This widget is the root of your application.
   @override
@@ -101,25 +94,30 @@ class MyApp extends StatelessWidget {
           page: () => CreateQueueItemPage(),
         ),
       ],
-      initialBinding: ApplicationBindings(),
     );
   }
 
   FutureBuilder<dynamic> _showStartScreen() {
     return FutureBuilder(
-      future: controller.initialize(),
+      future: userService.initialize(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            // We have a user, go to profile view.
-            if (snapshot.data is User) {
-              log(snapshot.data.accessToken);
-              return QueuePage();
-            }
+            // We have a user, go to main
+            final response = snapshot.data as BackendResponse?;
 
             // we do not have user data, user needs to
             // authenticate.
-            return AuthPage();
+            if (response == null) {
+              return AuthPage();
+            }
+
+            if (response.error == true) {
+              return AuthPage();
+            }
+
+            log(response.data["accessToken"]);
+            return QueuePage();
 
           default:
             return _showSplashScreen();
