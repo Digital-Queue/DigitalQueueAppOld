@@ -29,7 +29,7 @@ Future main() async {
   // Init firebase token change notifier
   FirebaseMessaging.instance.onTokenRefresh.listen(
     (token) async {
-      final cache = const FlutterSecureStorage();
+      const cache = FlutterSecureStorage();
       await cache.write(key: 'user_device_token', value: token);
     },
   );
