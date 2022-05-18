@@ -78,14 +78,21 @@ class ReceivedQueuesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Center(child: Text("Hello!")),
-    );
+    return QueuesListWidget();
   }
 }
 
 class SentQueuesWidget extends StatelessWidget {
-  const SentQueuesWidget({
+  const SentQueuesWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return QueuesListWidget();
+  }
+}
+
+class QueuesListWidget extends StatelessWidget {
+  const QueuesListWidget({
     Key? key,
   }) : super(key: key);
 
