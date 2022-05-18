@@ -33,9 +33,14 @@ class QueueService extends BackendService {
     }
 
     final sent = response.data["sent"] as Iterable;
-    final requests = sent.map((e) => CourseQueue.fromJson(e)).toList();
+    final received = response.data["received"] as Iterable;
 
-    return BackendResponse(data: requests);
+    final queues = {
+      "sent": sent.map((e) => CourseQueue.fromJson(e)).toList(),
+      "received": received.map((e) => CourseQueue.fromJson(e)).toList()
+    };
+
+    return BackendResponse(data: queues);
   }
 
   Future<BackendResponse> createQueueItem({required String courseId}) async {

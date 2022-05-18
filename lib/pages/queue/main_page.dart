@@ -1,4 +1,4 @@
-import 'package:digital_queue/pages/queue/course_queue.dart';
+import 'package:digital_queue/pages/queue/queues_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,12 +26,7 @@ class MainPage extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: controller.isTeacher(),
-        builder: (context, snapshot) {
-          return CourseQueueWidget();
-        },
-      ),
+      body: QueuesWidget(),
     );
   }
 }

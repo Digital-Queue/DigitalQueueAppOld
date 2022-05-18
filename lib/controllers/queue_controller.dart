@@ -1,11 +1,13 @@
 import 'package:digital_queue/services/queue_service.dart';
+import 'package:digital_queue/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 
 class QueueController extends GetxController {
   final queueService = Get.put(QueueService());
+  final userService = Get.find<UserService>();
+
   final cache = const FlutterSecureStorage();
 
   late final TextEditingController _findCourseTextController;
@@ -24,17 +26,14 @@ class QueueController extends GetxController {
 
   get findCourseTextController => _findCourseTextController;
 
-  Future<bool> isTeacher() async {
-    final accessToken = await cache.read(key: 'user_access_token');
-    final data = Jwt.parseJwt(accessToken!);
-
-    final isTeacher = data.keys.any((element) => element == 'teacher');
-    return isTeacher;
-  }
-
-  Future<List<CourseQueue>> getQueues() async {
+  Future<ViewData> getViewData() async {
+    final teacher = await userService.isTeacherUser();
     final queues = await queueService.getQueues();
-    return queues.data as List<CourseQueue>;
+
+    return ViewData(queues: {
+      "sent": queues.data["sent"],
+      "received": queues.data["received"],
+    }, teacher: teacher);
   }
 
   Future<List<Course>> findCourse(String query) async {
@@ -78,4 +77,10 @@ class QueueController extends GetxController {
     Get.snackbar("Success", "Item added to ${course.title} queue");
     Get.offAllNamed("/queue");
   }
+}
+
+class ViewData {
+  late final Map<String, List<CourseQueue>> queues;
+  late final bool teacher;
+  ViewData({required this.queues, required this.teacher});
 }
