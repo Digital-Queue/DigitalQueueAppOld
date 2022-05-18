@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:digital_queue/models/user.dart';
 import 'package:digital_queue/services/backend_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class UserService extends BackendService {
   Future<BackendResponse?> initialize() async {
@@ -30,6 +31,14 @@ class UserService extends BackendService {
     );
 
     return response;
+  }
+
+  Future<bool> isTeacherUser() async {
+    final accessToken = await cache.read(key: 'user_access_token');
+    final data = Jwt.parseJwt(accessToken!);
+
+    final hasTeacherClaim = data.keys.any((element) => element == 'teacher');
+    return hasTeacherClaim;
   }
 
   Future<BackendResponse> refreshAuth({
