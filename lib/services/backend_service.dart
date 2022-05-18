@@ -10,6 +10,7 @@ class DioClientInterceptor extends Interceptor {
     handler.resolve(
       Response(
         requestOptions: err.requestOptions,
+        statusCode: err.response?.statusCode,
         data: BackendResponse.createError(
           message: err.message,
         ),

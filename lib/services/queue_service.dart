@@ -2,13 +2,10 @@ import 'package:digital_queue/services/backend_service.dart';
 
 class QueueService extends BackendService {
   Future<BackendResponse> search({required String query}) async {
-    final accessToken = await cache.read(key: 'user_access_token');
     final response = await send(
       path: "/courses?q=$query",
       method: "GET",
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
+      requireAuth: true,
     );
 
     if (response.error == true) {
@@ -22,13 +19,10 @@ class QueueService extends BackendService {
   }
 
   Future<BackendResponse> getQueues() async {
-    final accessToken = await cache.read(key: 'user_access_token');
     final response = await send(
       path: "/courses/get-requests-queue",
       method: "GET",
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
+      requireAuth: true,
     );
 
     if (response.error == true) {
@@ -42,14 +36,13 @@ class QueueService extends BackendService {
   }
 
   Future<BackendResponse> createQueueItem({required String courseId}) async {
-    final accessToken = await cache.read(key: 'user_access_token');
-
-    final response =
-        await send(path: "/courses/create-request", method: "POST", headers: {
-      "Authorization": "Bearer $accessToken",
-    }, params: {
-      "courseId": courseId,
-    });
+    final response = await send(
+        path: "/courses/create-request",
+        method: "POST",
+        requireAuth: true,
+        params: {
+          "courseId": courseId,
+        });
 
     return response;
   }
@@ -58,15 +51,15 @@ class QueueService extends BackendService {
     required String courseId,
     required String requestId,
   }) async {
-    final accessToken = await cache.read(key: 'user_access_token');
-
-    final response =
-        await send(path: "/courses/complete-request", method: "POST", headers: {
-      "Authorization": "Bearer $accessToken",
-    }, params: {
-      "courseId": courseId,
-      "requestId": requestId,
-    });
+    final response = await send(
+      path: "/courses/complete-request",
+      method: "POST",
+      requireAuth: true,
+      params: {
+        "courseId": courseId,
+        "requestId": requestId,
+      },
+    );
 
     return response;
   }

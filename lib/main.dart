@@ -34,6 +34,8 @@ Future main() async {
     },
   );
 
+  // TODO: handler firebase notifications
+
   runApp(MyApp());
 }
 
