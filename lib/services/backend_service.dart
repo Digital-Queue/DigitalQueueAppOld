@@ -34,7 +34,10 @@ class DioClientInterceptor extends Interceptor {
 
 class BackendService {
   final cache = const FlutterSecureStorage();
-  final baseUrl = 'http://10.0.2.2:5241/api';
+  final baseUrl = const String.fromEnvironment(
+    "API_BASE_URL",
+    defaultValue: 'http://10.0.2.2:5241/api',
+  );
   late final Dio client;
 
   BackendService() {

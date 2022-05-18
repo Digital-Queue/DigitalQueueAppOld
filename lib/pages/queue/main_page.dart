@@ -13,7 +13,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Queue"),
+        title: const Text("Queues"),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
