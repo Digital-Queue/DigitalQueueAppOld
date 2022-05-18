@@ -101,16 +101,13 @@ class UserService extends BackendService {
   }
 
   Future<BackendResponse?> logout() async {
-    final accessToken = await cache.read(key: 'user_access_token');
     BackendResponse? response;
     try {
       // delete remote session data
       response = await send(
         path: "/sessions/terminate-session",
         method: "POST",
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
+        requireAuth: true,
       );
     } catch (error) {
       log(error.toString());
@@ -127,9 +124,7 @@ class UserService extends BackendService {
     final response = await send(
       path: "/accounts/get-profile",
       method: "GET",
-      headers: {
-        "authorization": 'Bearer $accessToken',
-      },
+      requireAuth: true,
     );
 
     if (response.error == true) {
@@ -152,33 +147,26 @@ class UserService extends BackendService {
   }
 
   Future<BackendResponse> updateName({required String name}) async {
-    final accessToken = await cache.read(key: 'user_access_token');
-
     final response = await send(
       path: "/accounts/set-name",
       method: "PATCH",
       data: {
         "name": name,
       },
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
+      requireAuth: true,
     );
 
     return response;
   }
 
   Future<BackendResponse> getChangeEmailToken({required String email}) async {
-    final accessToken = await cache.read(key: 'user_access_token');
     final response = await send(
       path: "/accounts/request-email-change",
       method: "POST",
       data: {
         "email": email,
       },
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
+      requireAuth: true,
     );
 
     return response;
@@ -186,7 +174,6 @@ class UserService extends BackendService {
 
   Future<BackendResponse> changeEmail(
       {required String email, required String code}) async {
-    final accessToken = await cache.read(key: 'user_access_token');
     final response = await send(
       path: "/accounts/change-email",
       method: "PATCH",
@@ -194,9 +181,7 @@ class UserService extends BackendService {
         "email": email,
         "token": code,
       },
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
+      requireAuth: true,
     );
 
     return response;
