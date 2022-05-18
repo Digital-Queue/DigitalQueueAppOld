@@ -3,9 +3,12 @@ import 'package:digital_queue/services/backend_service.dart';
 class QueueService extends BackendService {
   Future<BackendResponse> search({required String query}) async {
     final response = await send(
-      path: "/courses?q=$query",
+      path: "/courses",
       method: "GET",
       requireAuth: true,
+      params: {
+        'q': query,
+      },
     );
 
     if (response.error == true) {
