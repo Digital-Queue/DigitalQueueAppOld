@@ -10,8 +10,12 @@ class QueuesWidget extends StatelessWidget {
   final controller = Get.find<QueueController>();
 
   final pages = [
-    (Map queues) => QueuesListWidget(queues: queues["sent"]),
-    (Map queues) => QueuesListWidget(queues: queues["received"]),
+    () => GetBuilder<QueueController>(builder: (controller) {
+          return QueuesListWidget(queues: controller.sent);
+        }),
+    () => GetBuilder<QueueController>(builder: (controller) {
+          return QueuesListWidget(queues: controller.received);
+        }),
   ];
 
   final _currentPageIndex = 0.obs;
@@ -19,23 +23,21 @@ class QueuesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ViewData>(
-      future: controller.getViewData(),
+    return FutureBuilder(
+      future: controller.initialize(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const LoadingWidget();
         }
 
-        final data = snapshot.data!;
-
         // return list
         return Obx(
           () => Scaffold(
-            body: pages.elementAt(_currentPageIndex.value)(data.queues),
+            body: pages.elementAt(_currentPageIndex.value)(),
             floatingActionButton: _showCreateActionButton.value
                 ? _createItemActionButton()
                 : null,
-            bottomNavigationBar: data.teacher ? _navigationMenu() : null,
+            bottomNavigationBar: controller.teacher ? _navigationMenu() : null,
           ),
         );
       },
@@ -83,13 +85,18 @@ class QueuesListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QueueController>(builder: (controller) {
-      return ListView.builder(
-        itemCount: queues.length,
-        itemBuilder: (context, index) {
-          return CourseQueueItemWidget(
-            queue: queues.elementAt(index),
-          );
+      return RefreshIndicator(
+        onRefresh: () async {
+          await controller.initialize();
         },
+        child: ListView.builder(
+          itemCount: queues.length,
+          itemBuilder: (context, index) {
+            return CourseQueueItemWidget(
+              queue: queues.elementAt(index),
+            );
+          },
+        ),
       );
     });
   }

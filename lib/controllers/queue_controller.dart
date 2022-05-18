@@ -26,14 +26,22 @@ class QueueController extends GetxController {
 
   get findCourseTextController => _findCourseTextController;
 
-  Future<ViewData> getViewData() async {
+  var _sentQueue = List<CourseQueue>.empty();
+  get sent => _sentQueue;
+
+  var _receivedQueue = List<CourseQueue>.empty();
+  get received => _receivedQueue;
+
+  var _teacher = false;
+  get teacher => _teacher;
+
+  Future<void> initialize() async {
     final teacher = await userService.isTeacherUser();
     final queues = await queueService.getQueues();
 
-    return ViewData(queues: {
-      "sent": queues.data["sent"],
-      "received": queues.data["received"],
-    }, teacher: teacher);
+    _sentQueue = queues.data["sent"];
+    _receivedQueue = queues.data["received"];
+    _teacher = teacher;
   }
 
   Future<List<Course>> findCourse(String query) async {
