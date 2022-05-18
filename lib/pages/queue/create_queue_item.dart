@@ -17,7 +17,7 @@ class CreateQueueItemPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create New Item"),
+        title: const Text("Add To Queue"),
       ),
       body: Padding(
         padding: const EdgeInsets.only(
