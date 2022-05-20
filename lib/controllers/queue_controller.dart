@@ -7,40 +7,32 @@ class QueueController extends GetxController {
   final queueService = Get.put(QueueService());
   final userService = Get.find<UserService>();
 
-  late final TextEditingController _findCourseTextController;
-
   @override
   void onInit() {
     super.onInit();
-    _findCourseTextController = TextEditingController();
+    findCourseTextController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _findCourseTextController.dispose();
+    findCourseTextController.dispose();
     super.dispose();
   }
 
-  get findCourseTextController => _findCourseTextController;
+  late final TextEditingController findCourseTextController;
 
-  var _sentQueue = List<CourseQueue>.empty();
-  get sent => _sentQueue;
+  final currentPageIndex = 0.obs;
+  final showCreateActionButton = true.obs;
 
-  var _receivedQueue = List<CourseQueue>.empty();
-  get received => _receivedQueue;
-
-  var _teacher = false;
-  get teacher => _teacher;
-
-  final isInitializing = false.obs;
+  final sent = List<CourseQueue>.empty().obs;
+  final received = List<CourseQueue>.empty().obs;
+  final teacher = false.obs;
 
   Future<void> initialize() async {
-    final teacher = await userService.isTeacherUser();
     final queues = await queueService.getQueues();
-
-    _sentQueue = queues.data["sent"];
-    _receivedQueue = queues.data["received"];
-    _teacher = teacher;
+    sent.value = queues.data["sent"];
+    received.value = queues.data["received"];
+    teacher.value = await userService.isTeacherUser();
   }
 
   Future<List<Course>> findCourse(String query) async {
@@ -58,7 +50,7 @@ class QueueController extends GetxController {
   late Course course;
   void selectCourse(Course suggestion) {
     course = suggestion;
-    _findCourseTextController.text = course.title;
+    findCourseTextController.text = course.title;
   }
 
   Future<void> submit() async {

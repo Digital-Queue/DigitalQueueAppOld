@@ -18,9 +18,6 @@ class QueuesWidget extends StatelessWidget {
         }),
   ];
 
-  final _currentPageIndex = 0.obs;
-  final _showCreateActionButton = true.obs;
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -33,11 +30,12 @@ class QueuesWidget extends StatelessWidget {
         // return list
         return Obx(
           () => Scaffold(
-            body: pages.elementAt(_currentPageIndex.value)(),
-            floatingActionButton: _showCreateActionButton.value
+            body: pages.elementAt(controller.currentPageIndex.value)(),
+            floatingActionButton: controller.showCreateActionButton.value
                 ? _createItemActionButton()
                 : null,
-            bottomNavigationBar: controller.teacher ? _navigationMenu() : null,
+            bottomNavigationBar:
+                controller.teacher.value ? _navigationMenu() : null,
           ),
         );
       },
@@ -57,10 +55,10 @@ class QueuesWidget extends StatelessWidget {
           label: "Received",
         ),
       ],
-      currentIndex: _currentPageIndex.value,
+      currentIndex: controller.currentPageIndex.value,
       onTap: (index) {
-        _currentPageIndex.value = index;
-        _showCreateActionButton.value = index == 0;
+        controller.currentPageIndex.value = index;
+        controller.showCreateActionButton.value = index == 0;
       },
     );
   }
@@ -117,7 +115,7 @@ class CourseQueueItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (controller.teacher) {
+        if (controller.teacher.value) {
           controller.viewQueue(queue);
         }
       },
