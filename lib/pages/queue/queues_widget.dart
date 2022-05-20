@@ -176,19 +176,26 @@ class CourseQueueItemWidget extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(2),
+                child: SvgPicture.asset(
+                  "assets/checklist.svg",
+                  height: 48,
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       queue.course,
                       style: const TextStyle(
-                        fontSize: 24,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -200,19 +207,8 @@ class CourseQueueItemWidget extends StatelessWidget {
                         fontStyle: FontStyle.italic,
                         color: Colors.grey,
                       ),
-                    )
+                    ),
                   ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  "${queue.total} Pending",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
                 ),
               ),
             ],
