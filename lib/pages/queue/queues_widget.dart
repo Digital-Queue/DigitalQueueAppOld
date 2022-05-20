@@ -2,6 +2,7 @@ import 'package:digital_queue/controllers/queue_controller.dart';
 import 'package:digital_queue/pages/shared/loading_widget.dart';
 import 'package:digital_queue/services/queue_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class QueuesWidget extends StatelessWidget {
@@ -104,13 +105,44 @@ class QueuesListWidget extends StatelessWidget {
           await refresh();
         },
         child: ListView.builder(
-          itemCount: queues.length,
+          itemCount: queues.isEmpty ? 1 : queues.length,
           itemBuilder: (context, index) {
+            if (queues.isEmpty && index == 0) {
+              return const EmptyListPlaceholderWidget();
+            }
             return CourseQueueItemWidget(
               queue: queues.elementAt(index),
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class EmptyListPlaceholderWidget extends StatelessWidget {
+  const EmptyListPlaceholderWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          SvgPicture.asset("assets/empty.svg"),
+          Container(
+            alignment: Alignment.topCenter,
+            child: const Text(
+              "Queue is empty, pull down to refresh...",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color.fromARGB(255, 128, 128, 128),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
