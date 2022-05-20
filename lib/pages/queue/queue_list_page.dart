@@ -2,6 +2,7 @@ import 'package:digital_queue/controllers/queue_controller.dart';
 import 'package:digital_queue/pages/shared/loading_widget.dart';
 import 'package:digital_queue/services/queue_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class QueueListPage extends StatelessWidget {
@@ -126,10 +127,9 @@ class QueueItemWidget extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(4),
-                  child: Icon(
-                    Icons.person,
-                    size: 52,
-                    color: Colors.grey.shade800,
+                  child: SvgPicture.asset(
+                    "assets/student.svg",
+                    height: 52,
                   ),
                 ),
                 Container(
