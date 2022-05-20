@@ -11,10 +11,16 @@ class QueuesWidget extends StatelessWidget {
 
   final pages = [
     () => GetBuilder<QueueController>(builder: (controller) {
-          return QueuesListWidget(queues: controller.sent);
+          return QueuesListWidget(
+            queues: controller.sent,
+            refresh: controller.initialize,
+          );
         }),
     () => GetBuilder<QueueController>(builder: (controller) {
-          return QueuesListWidget(queues: controller.received);
+          return QueuesListWidget(
+            queues: controller.received,
+            refresh: controller.initialize,
+          );
         }),
   ];
 
@@ -77,33 +83,36 @@ class QueuesWidget extends StatelessWidget {
 
 class QueuesListWidget extends StatelessWidget {
   final List<CourseQueue> queues;
-  const QueuesListWidget({Key? key, required this.queues}) : super(key: key);
+  final Future<void> Function() refresh;
+
+  const QueuesListWidget({
+    Key? key,
+    required this.queues,
+    required this.refresh,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<QueueController>(
-      builder: (controller) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            await controller.initialize();
+    return Obx(
+      () => RefreshIndicator(
+        onRefresh: () async {
+          await refresh();
+        },
+        child: ListView.builder(
+          itemCount: queues.length,
+          itemBuilder: (context, index) {
+            return CourseQueueItemWidget(
+              queue: queues.elementAt(index),
+            );
           },
-          child: ListView.builder(
-            itemCount: queues.length,
-            itemBuilder: (context, index) {
-              return CourseQueueItemWidget(
-                queue: queues.elementAt(index),
-              );
-            },
-          ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
 
 class CourseQueueItemWidget extends StatelessWidget {
   final CourseQueue queue;
-
   final controller = Get.find<QueueController>();
 
   CourseQueueItemWidget({
@@ -116,7 +125,7 @@ class CourseQueueItemWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (controller.teacher.value) {
-          controller.viewQueue(queue);
+          Get.toNamed("/queue", arguments: queue);
         }
       },
       child: Card(
