@@ -13,11 +13,12 @@ class QueueListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        /*leading: IconButton(
-          onPressed: () => Get.back(),
+        leading: IconButton(
+          onPressed: () => Get.offAndToNamed("/main", parameters: {
+            "tab": "1",
+          }),
           icon: const Icon(Icons.arrow_back),
-        ),*/
-        automaticallyImplyLeading: true,
+        ),
         title: Text(queue.course),
       ),
       body: Column(

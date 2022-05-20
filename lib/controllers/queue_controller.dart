@@ -29,10 +29,17 @@ class QueueController extends GetxController {
   final teacher = false.obs;
 
   Future<void> initialize() async {
+    // fetch queues and update lists
     final queues = await queueService.getQueues();
     sent.value = queues.data["sent"];
     received.value = queues.data["received"];
+
+    // verify if user is teacher
     teacher.value = await userService.isTeacherUser();
+
+    // navigate to a specific tab
+    final tab = Get.parameters["tab"];
+    currentPageIndex.value = int.tryParse(tab ?? "0")!;
   }
 
   Future<List<Course>> findCourse(String query) async {
@@ -78,7 +85,7 @@ class QueueController extends GetxController {
   }
 
   void viewQueue(CourseQueue queue) {
-    Get.toNamed("/queue", arguments: queue);
+    Get.offAndToNamed("/queue", arguments: queue);
   }
 
   Future<void> completeItem(String itemId) async {
