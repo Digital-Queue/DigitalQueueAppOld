@@ -31,7 +31,7 @@ class ProfileWidget extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Get.toNamed("/queue");
+            Get.toNamed("/main");
           },
         ),
       ),

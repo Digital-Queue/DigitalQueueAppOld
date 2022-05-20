@@ -56,7 +56,6 @@ class QueueService extends BackendService {
   }
 
   Future<BackendResponse> completeQueueItem({
-    required String courseId,
     required String requestId,
   }) async {
     final response = await send(
@@ -64,8 +63,7 @@ class QueueService extends BackendService {
       method: "POST",
       requireAuth: true,
       params: {
-        "courseId": courseId,
-        "requestId": requestId,
+        "itemId": requestId,
       },
     );
 
@@ -108,7 +106,9 @@ class CourseQueue {
     return CourseQueue(
       course: data["course"],
       total: data["total"],
-      requests: requests.map((e) => QueueItem(id: e["id"])).toList(),
+      requests: requests
+          .map((e) => QueueItem(id: e["id"], student: e["student"]))
+          .toList(),
     );
   }
 }

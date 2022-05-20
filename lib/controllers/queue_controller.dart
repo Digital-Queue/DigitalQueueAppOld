@@ -1,14 +1,11 @@
 import 'package:digital_queue/services/queue_service.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class QueueController extends GetxController {
   final queueService = Get.put(QueueService());
   final userService = Get.find<UserService>();
-
-  final cache = const FlutterSecureStorage();
 
   late final TextEditingController _findCourseTextController;
 
@@ -34,6 +31,8 @@ class QueueController extends GetxController {
 
   var _teacher = false;
   get teacher => _teacher;
+
+  final isInitializing = false.obs;
 
   Future<void> initialize() async {
     final teacher = await userService.isTeacherUser();
@@ -83,7 +82,15 @@ class QueueController extends GetxController {
     }
 
     Get.snackbar("Success", "Item added to ${course.title} queue");
-    Get.offAllNamed("/queue");
+    Get.offAllNamed("/main");
+  }
+
+  void viewQueue(CourseQueue queue) {
+    Get.toNamed("/queue", arguments: queue);
+  }
+
+  Future<void> completeItem(String itemId) async {
+    await queueService.completeQueueItem(requestId: itemId);
   }
 }
 
