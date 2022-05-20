@@ -26,6 +26,11 @@ class QueuesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // navigate to a specific tab
+    final tab = Get.parameters["tab"] ?? "0";
+    controller.currentPageIndex.value = int.tryParse(tab)!;
+    Get.parameters.remove("tab");
+
     return FutureBuilder(
       future: controller.initialize(),
       builder: (context, snapshot) {

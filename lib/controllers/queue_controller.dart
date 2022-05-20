@@ -36,10 +36,6 @@ class QueueController extends GetxController {
 
     // verify if user is teacher
     teacher.value = await userService.isTeacherUser();
-
-    // navigate to a specific tab
-    final tab = Get.parameters["tab"];
-    currentPageIndex.value = int.tryParse(tab ?? "0")!;
   }
 
   Future<List<Course>> findCourse(String query) async {
