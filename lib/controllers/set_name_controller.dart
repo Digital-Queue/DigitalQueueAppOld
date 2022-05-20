@@ -44,6 +44,6 @@ class SetNameController extends GetxController {
       return;
     }
 
-    Get.offNamed("/queue");
+    Get.offNamed("/main");
   }
 }

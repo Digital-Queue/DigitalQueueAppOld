@@ -9,6 +9,7 @@ import 'package:digital_queue/pages/change_email/change_email.dart';
 import 'package:digital_queue/pages/change_email/confirm_code.dart';
 import 'package:digital_queue/pages/queue/create_queue_item.dart';
 import 'package:digital_queue/pages/queue/main_page.dart';
+import 'package:digital_queue/pages/queue/queue_list_page.dart';
 import 'package:digital_queue/services/backend_service.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -88,13 +89,17 @@ class MyApp extends StatelessWidget {
           page: () => ConfirmCodePage(),
         ),
         GetPage(
-          name: "/queue",
+          name: "/main",
           page: () => MainPage(),
         ),
         GetPage(
           name: "/create",
           page: () => CreateQueueItemPage(),
         ),
+        GetPage(
+          name: "/queue",
+          page: () => QueueListPage(),
+        )
       ],
     );
   }
