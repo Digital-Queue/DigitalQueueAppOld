@@ -31,6 +31,24 @@ class QueueController extends GetxController {
   Future<void> initialize() async {
     // fetch queues and update lists
     final queues = await queueService.getQueues();
+    if (queues.error == true) {
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${queues.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+
+      return;
+    }
+
     sent.value = queues.data["sent"];
     received.value = queues.data["received"];
 
@@ -62,7 +80,7 @@ class QueueController extends GetxController {
       Get.dialog(
         AlertDialog(
           content: Text(
-            "Error: ${response.error}",
+            response.message ?? "Error",
           ),
           actions: [
             TextButton(

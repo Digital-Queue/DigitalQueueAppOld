@@ -23,7 +23,7 @@ class QueueService extends BackendService {
 
   Future<BackendResponse> getQueues() async {
     final response = await send(
-      path: "/courses/get-requests-queue",
+      path: "/courses/get-queues",
       method: "GET",
       requireAuth: true,
     );
@@ -46,7 +46,7 @@ class QueueService extends BackendService {
 
   Future<BackendResponse> createQueueItem({required String courseId}) async {
     final response = await send(
-        path: "/courses/create-request",
+        path: "/courses/create-queue-item",
         method: "POST",
         requireAuth: true,
         params: {
@@ -60,7 +60,7 @@ class QueueService extends BackendService {
     required String requestId,
   }) async {
     final response = await send(
-      path: "/courses/complete-request",
+      path: "/courses/complete-queue-item",
       method: "POST",
       requireAuth: true,
       params: {
