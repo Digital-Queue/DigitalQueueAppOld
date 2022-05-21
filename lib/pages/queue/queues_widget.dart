@@ -190,7 +190,7 @@ class CourseQueueItemWidget extends StatelessWidget {
               ),
               Container(
                 alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(left: 4),
+                padding: const EdgeInsets.only(left: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -201,15 +201,30 @@ class CourseQueueItemWidget extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Text(
-                      "Tap to view queue",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    Builder(
+                      builder: (context) {
+                        if (queue.type == 'sent') {
+                          return Text(
+                            "${queue.total} Pending",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          );
+                        }
+
+                        return const Text(
+                          "Tap to view queue",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.grey,
+                          ),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),

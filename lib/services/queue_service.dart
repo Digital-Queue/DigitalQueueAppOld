@@ -36,8 +36,9 @@ class QueueService extends BackendService {
     final received = response.data["received"] as Iterable;
 
     final queues = {
-      "sent": sent.map((e) => CourseQueue.fromJson(e)).toList(),
-      "received": received.map((e) => CourseQueue.fromJson(e)).toList()
+      "sent": sent.map((e) => CourseQueue.fromJson("sent", e)).toList(),
+      "received":
+          received.map((e) => CourseQueue.fromJson("received", e)).toList()
     };
 
     return BackendResponse(data: queues);
@@ -98,12 +99,19 @@ class QueueItem {
 class CourseQueue {
   late String course;
   late int total;
+  late String type;
   List<QueueItem>? requests = List.empty();
-  CourseQueue({required this.course, required this.total, this.requests});
+  CourseQueue({
+    required this.type,
+    required this.course,
+    required this.total,
+    this.requests,
+  });
 
-  factory CourseQueue.fromJson(Map<String, dynamic> data) {
+  factory CourseQueue.fromJson(String type, Map<String, dynamic> data) {
     Iterable requests = data["requests"];
     return CourseQueue(
+      type: type,
       course: data["course"],
       total: data["total"],
       requests: requests
