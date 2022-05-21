@@ -12,7 +12,7 @@ class DioClientInterceptor extends Interceptor {
         requestOptions: err.requestOptions,
         statusCode: err.response?.statusCode,
         data: BackendResponse.createError(
-          message: err.message,
+          message: err.response?.data["message"] ?? err.message,
         ),
       ),
     );
