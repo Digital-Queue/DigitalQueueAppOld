@@ -88,9 +88,3 @@ class QueueController extends GetxController {
     await queueService.completeQueueItem(requestId: itemId);
   }
 }
-
-class ViewData {
-  late final Map<String, List<CourseQueue>> queues;
-  late final bool teacher;
-  ViewData({required this.queues, required this.teacher});
-}

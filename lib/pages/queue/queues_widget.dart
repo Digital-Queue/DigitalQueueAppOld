@@ -6,9 +6,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class QueuesWidget extends StatelessWidget {
-  QueuesWidget({Key? key}) : super(key: key);
-
   final controller = Get.find<QueueController>();
+
+  QueuesWidget({Key? key}) : super(key: key) {
+    // navigate to a specific tab
+    final tab = Get.parameters["tab"];
+    if (tab != null) {
+      controller.currentPageIndex.value = int.parse(tab);
+      Get.parameters.remove("tab");
+    }
+  }
 
   final pages = [
     () => GetBuilder<QueueController>(builder: (controller) {
@@ -27,11 +34,6 @@ class QueuesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // navigate to a specific tab
-    final tab = Get.parameters["tab"] ?? "0";
-    controller.currentPageIndex.value = int.tryParse(tab)!;
-    Get.parameters.remove("tab");
-
     return FutureBuilder(
       future: controller.initialize(),
       builder: (context, snapshot) {
