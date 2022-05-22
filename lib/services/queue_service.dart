@@ -44,6 +44,24 @@ class QueueService extends BackendService {
     return BackendResponse(data: queues);
   }
 
+  Future<BackendResponse> getCourseQueue(String courseId) async {
+    final response = await send(
+      path: "/courses/$courseId/queue",
+      method: "GET",
+      requireAuth: true,
+    );
+
+    if (response.error == true) {
+      return BackendResponse(data: List<CourseQueue>.empty());
+    }
+
+    final list = response.data as Iterable;
+
+    final queues = list.map((e) => QueueItem.fromJson(e)).toList();
+
+    return BackendResponse(data: queues);
+  }
+
   Future<BackendResponse> createQueueItem({required String courseId}) async {
     final response = await send(
         path: "/courses/create-queue-item",
@@ -57,15 +75,13 @@ class QueueService extends BackendService {
   }
 
   Future<BackendResponse> completeQueueItem({
-    required String requestId,
+    required String courseId,
+    required String itemId,
   }) async {
     final response = await send(
-      path: "/courses/complete-queue-item",
-      method: "POST",
+      path: "/courses/$courseId/queue/$itemId/complete",
+      method: "PATCH",
       requireAuth: true,
-      params: {
-        "itemId": requestId,
-      },
     );
 
     return response;
@@ -93,30 +109,41 @@ class Course {
 class QueueItem {
   late String id;
   late String? student;
-  QueueItem({required this.id, this.student});
+  late String? createdAt;
+  QueueItem({
+    required this.id,
+    this.student,
+    this.createdAt,
+  });
+  factory QueueItem.fromJson(Map<String, dynamic> data) {
+    return QueueItem(
+      id: data["id"],
+      student: data["student"],
+      createdAt: data["createdAt"],
+    );
+  }
 }
 
 class CourseQueue {
   late String course;
+  late String courseId;
   late int total;
   late String type;
   List<QueueItem>? requests = List.empty();
   CourseQueue({
     required this.type,
     required this.course,
+    required this.courseId,
     required this.total,
     this.requests,
   });
 
   factory CourseQueue.fromJson(String type, Map<String, dynamic> data) {
-    Iterable requests = data["requests"];
     return CourseQueue(
       type: type,
       course: data["course"],
+      courseId: data["courseId"],
       total: data["total"],
-      requests: requests
-          .map((e) => QueueItem(id: e["id"], student: e["student"]))
-          .toList(),
     );
   }
 }

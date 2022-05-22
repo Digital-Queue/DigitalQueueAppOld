@@ -27,6 +27,7 @@ class QueueController extends GetxController {
   final sent = List<CourseQueue>.empty().obs;
   final received = List<CourseQueue>.empty().obs;
   final teacher = false.obs;
+  final queue = List<QueueItem>.empty().obs;
 
   Future<void> initialize() async {
     // fetch queues and update lists
@@ -102,7 +103,48 @@ class QueueController extends GetxController {
     Get.offAndToNamed("/queue", arguments: queue);
   }
 
-  Future<void> completeItem(String itemId) async {
-    await queueService.completeQueueItem(requestId: itemId);
+  Future<void> completeItem(String courseId, String itemId) async {
+    final response = await queueService.completeQueueItem(
+      itemId: itemId,
+      courseId: courseId,
+    );
+    if (response.error == true) {
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Something went wrong",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> getQueueItems(String courseId) async {
+    final response = await queueService.getCourseQueue(courseId);
+    if (response.error == true) {
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            response.message ?? "Error",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+
+      queue.value = List.empty();
+    }
+
+    queue.value = response.data;
   }
 }
