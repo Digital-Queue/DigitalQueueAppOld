@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 class QueueListPage extends StatelessWidget {
   QueueListPage({Key? key}) : super(key: key);
 
-  final CourseQueue queue = Get.arguments;
+  final CourseQueue queue = Get.arguments as CourseQueue;
+  final controller = Get.find<QueueController>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,31 +23,48 @@ class QueueListPage extends StatelessWidget {
         ),
         title: Text(queue.course),
       ),
-      body: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(top: 4, left: 4),
-            child: const Text(
-              "Swipe right to complete an item",
-              style: TextStyle(
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 87, 87, 87),
-              ),
+      body: FutureBuilder(
+        future: controller.getQueueItems(queue.courseId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const LoadingWidget();
+          }
+
+          return Obx(
+            () => Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(top: 4, left: 4),
+                  child: const Text(
+                    "Swipe right to complete an item",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 87, 87, 87),
+                    ),
+                  ),
+                ),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    await controller.getQueueItems(queue.courseId);
+                  },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.queue.length,
+                    itemBuilder: (context, index) {
+                      return QueueItemWidget(
+                        courseId: queue.courseId,
+                        item: controller.queue.elementAt(index),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: queue.requests?.length ?? 0,
-            itemBuilder: (context, index) {
-              return QueueItemWidget(
-                item: queue.requests!.elementAt(index),
-              );
-            },
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -54,13 +72,18 @@ class QueueListPage extends StatelessWidget {
 
 class QueueItemWidget extends StatelessWidget {
   final QueueItem item;
-  const QueueItemWidget({Key? key, required this.item}) : super(key: key);
+  final String courseId;
+  const QueueItemWidget({
+    Key? key,
+    required this.item,
+    required this.courseId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QueueController>(builder: (controller) {
       return Dismissible(
-        key: Key(item.id),
+        key: UniqueKey(),
         direction: DismissDirection.startToEnd,
         dismissThresholds: const {
           DismissDirection.startToEnd: 0.2,
@@ -68,7 +91,7 @@ class QueueItemWidget extends StatelessWidget {
         onDismissed: (direction) async {
           await Get.showOverlay(
             asyncFunction: () async {
-              await controller.completeItem(item.id);
+              await controller.completeItem(courseId, item.id);
             },
             loadingWidget: const LoadingWidget(),
             opacity: 0.6,

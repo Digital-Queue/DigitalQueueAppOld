@@ -28,6 +28,7 @@ class QueuesWidget extends StatelessWidget {
           return QueuesListWidget(
             queues: controller.received,
             refresh: controller.initialize,
+            clickable: true,
           );
         }),
   ];
@@ -92,11 +93,13 @@ class QueuesWidget extends StatelessWidget {
 class QueuesListWidget extends StatelessWidget {
   final List<CourseQueue> queues;
   final Future<void> Function() refresh;
+  final bool clickable;
 
   const QueuesListWidget({
     Key? key,
     required this.queues,
     required this.refresh,
+    this.clickable = false,
   }) : super(key: key);
 
   @override
@@ -114,6 +117,7 @@ class QueuesListWidget extends StatelessWidget {
             }
             return CourseQueueItemWidget(
               queue: queues.elementAt(index),
+              clickable: clickable,
             );
           },
         ),
@@ -152,18 +156,21 @@ class EmptyListPlaceholderWidget extends StatelessWidget {
 
 class CourseQueueItemWidget extends StatelessWidget {
   final CourseQueue queue;
+  final bool clickable;
+
   final controller = Get.find<QueueController>();
 
   CourseQueueItemWidget({
     Key? key,
     required this.queue,
+    this.clickable = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (controller.teacher.value) {
+        if (clickable) {
           Get.toNamed("/queue", arguments: queue);
         }
       },

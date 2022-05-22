@@ -62,17 +62,20 @@ class BackendService {
       headers.addAll(customHeaders);
     }
 
-    final response = await client.request(
-      path,
-      data: data,
-      queryParameters: params,
-      options: Options(
-        method: method,
-        headers: headers,
-      ),
-    );
-
-    return response.data as BackendResponse;
+    try {
+      final response = await client.request(
+        path,
+        data: data,
+        queryParameters: params,
+        options: Options(
+          method: method,
+          headers: headers,
+        ),
+      );
+      return response.data as BackendResponse;
+    } on Exception catch (e) {
+      return BackendResponse.createError(message: "Something went wrong");
+    }
   }
 }
 
