@@ -64,12 +64,10 @@ class QueueService extends BackendService {
 
   Future<BackendResponse> createQueueItem({required String courseId}) async {
     final response = await send(
-        path: "/courses/create-queue-item",
-        method: "POST",
-        requireAuth: true,
-        params: {
-          "courseId": courseId,
-        });
+      path: "/courses/$courseId/queue/create",
+      method: "POST",
+      requireAuth: true,
+    );
 
     return response;
   }
