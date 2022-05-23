@@ -29,7 +29,11 @@ class QueueService extends BackendService {
     );
 
     if (response.error == true) {
-      return BackendResponse(data: List<CourseQueue>.empty());
+      return BackendResponse(
+        data: List<CourseQueue>.empty(),
+        error: true,
+        message: response.message,
+      );
     }
 
     final sent = response.data["sent"] as Iterable;
