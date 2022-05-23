@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:digital_queue/services/notifications_service.dart';
 import 'package:digital_queue/firebase_options.dart';
 import 'package:digital_queue/pages/auth/auth.dart';
 import 'package:digital_queue/pages/auth/set_name.dart';
@@ -35,7 +36,17 @@ Future main() async {
     },
   );
 
-  // TODO: handler firebase notifications
+  // handler firebase notifications
+  final notificationService = Get.put(NotificationService());
+  await notificationService.initialize();
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    final notification = message.notification;
+
+    // If `onMessage` is triggered with a notification, construct our own
+    // local notification to show to users using the created channel.
+    notificationService.show(notification!);
+  });
 
   runApp(MyApp());
 }
