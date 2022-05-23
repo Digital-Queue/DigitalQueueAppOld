@@ -35,7 +35,11 @@ class UserService extends BackendService {
 
   Future<bool> isTeacherUser() async {
     final accessToken = await cache.read(key: 'user_access_token');
-    final data = Jwt.parseJwt(accessToken!);
+    if (accessToken == null) {
+      return false;
+    }
+
+    final data = Jwt.parseJwt(accessToken);
 
     final hasTeacherClaim = data.keys.any((element) => element == 'teacher');
     return hasTeacherClaim;
@@ -69,12 +73,18 @@ class UserService extends BackendService {
     return response;
   }
 
-  Future<BackendResponse> createAuth({required String email}) async {
+  Future<BackendResponse> createAuth({
+    required String email,
+    String? deviceToken,
+  }) async {
     final response = await send(
       path: "/accounts/authenticate",
       method: "POST",
       data: {
         "email": email,
+      },
+      headers: {
+        "X-Device-Token": deviceToken,
       },
     );
 
