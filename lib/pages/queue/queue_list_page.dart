@@ -91,7 +91,7 @@ class QueueItemWidget extends StatelessWidget {
         onDismissed: (direction) async {
           await Get.showOverlay(
             asyncFunction: () async {
-              await controller.completeItem(courseId, item.id);
+              await controller.completeQueueItem(courseId, item.id);
             },
             loadingWidget: const LoadingWidget(),
             opacity: 0.6,

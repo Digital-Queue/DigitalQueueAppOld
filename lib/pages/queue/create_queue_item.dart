@@ -75,7 +75,7 @@ class CreateQueueItemPage extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () async {
               _isProcessing.value = true;
-              await controller.submit();
+              await controller.createQueueItem();
               _isProcessing.value = false;
             },
             child: SizedBox(
