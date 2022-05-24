@@ -107,7 +107,7 @@ class QueueController extends GetxController {
     if (response.error == true) {
       Get.dialog(
         AlertDialog(
-          content: Text(
+          content: const Text(
             "Something went wrong",
           ),
           actions: [

@@ -208,29 +208,13 @@ class CourseQueueItemWidget extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Builder(
-                      builder: (context) {
-                        if (queue.type == 'sent') {
-                          return Text(
-                            "${queue.total} Pending",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          );
-                        }
-
-                        return const Text(
-                          "Tap to view queue",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.grey,
-                          ),
-                        );
-                      },
+                    Text(
+                      "${queue.total} Pending - Tap to view",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey,
+                      ),
                     )
                   ],
                 ),
