@@ -109,7 +109,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: "/queue",
-          page: () => QueueListPage(),
+          page: () => QueuePage(),
         )
       ],
     );

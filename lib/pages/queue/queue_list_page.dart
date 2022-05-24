@@ -1,12 +1,15 @@
+import 'dart:ui';
+
 import 'package:digital_queue/controllers/queue_controller.dart';
+import 'package:digital_queue/pages/queue/queues_widget.dart';
 import 'package:digital_queue/pages/shared/loading_widget.dart';
 import 'package:digital_queue/services/queue_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class QueueListPage extends StatelessWidget {
-  QueueListPage({Key? key}) : super(key: key);
+class QueuePage extends StatelessWidget {
+  QueuePage({Key? key}) : super(key: key);
 
   final CourseQueue queue = Get.arguments as CourseQueue;
   final controller = Get.find<QueueController>();
@@ -52,11 +55,17 @@ class QueueListPage extends StatelessWidget {
                   },
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: controller.queue.length,
+                    itemCount:
+                        controller.queue.isEmpty ? 1 : controller.queue.length,
                     itemBuilder: (context, index) {
+                      if (controller.queue.isEmpty && index == 0) {
+                        return const EmptyListPlaceholderWidget();
+                      }
+
                       return QueueItemWidget(
                         courseId: queue.courseId,
                         item: controller.queue.elementAt(index),
+                        index: index,
                       );
                     },
                   ),
@@ -73,10 +82,13 @@ class QueueListPage extends StatelessWidget {
 class QueueItemWidget extends StatelessWidget {
   final QueueItem item;
   final String courseId;
+  final int index;
+
   const QueueItemWidget({
     Key? key,
     required this.item,
     required this.courseId,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -89,6 +101,14 @@ class QueueItemWidget extends StatelessWidget {
           DismissDirection.startToEnd: 0.2,
         },
         onDismissed: (direction) async {
+          controller.queue.removeAt(index);
+          bool undo = await _waitUserForUndo();
+
+          if (undo) {
+            controller.queue.insert(index, item);
+            return;
+          }
+
           await Get.showOverlay(
             asyncFunction: () async {
               await controller.completeQueueItem(courseId, item.id);
@@ -171,5 +191,26 @@ class QueueItemWidget extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Future<bool> _waitUserForUndo() async {
+    bool undo = false;
+    await Get.showSnackbar(GetSnackBar(
+      messageText: const Text(
+        "Tap to undo",
+      ),
+      backgroundColor: Colors.white,
+      forwardAnimationCurve: Curves.easeOutExpo,
+      reverseAnimationCurve: Curves.easeInExpo,
+      showProgressIndicator: true,
+      duration: const Duration(seconds: 3),
+      animationDuration: const Duration(seconds: 1),
+      onTap: (snackbar) {
+        undo = true;
+        Get.closeCurrentSnackbar();
+      },
+    )).future;
+
+    return undo;
   }
 }
