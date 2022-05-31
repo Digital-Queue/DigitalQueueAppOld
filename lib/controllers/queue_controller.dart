@@ -1,3 +1,4 @@
+import 'package:digital_queue/pages/queue/queues_widget.dart';
 import 'package:digital_queue/services/queue_service.dart';
 import 'package:digital_queue/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -121,8 +122,8 @@ class QueueController extends GetxController {
     }
   }
 
-  Future<void> getQueueItems(String courseId) async {
-    final response = await queueService.getCourseQueue(courseId);
+  Future<void> getQueueItems(String courseId, QueueType type) async {
+    final response = await queueService.getCourseQueue(courseId, type);
     if (response.error == true) {
       Get.dialog(
         AlertDialog(

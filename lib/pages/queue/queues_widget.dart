@@ -8,27 +8,21 @@ import 'package:get/get.dart';
 class QueuesWidget extends StatelessWidget {
   final controller = Get.find<QueueController>();
 
-  QueuesWidget({Key? key}) : super(key: key) {
-    // navigate to a specific tab
-    final tab = Get.parameters["tab"];
-    if (tab != null) {
-      controller.currentPageIndex.value = int.parse(tab);
-      Get.parameters.remove("tab");
-    }
-  }
+  QueuesWidget({Key? key}) : super(key: key);
 
   final pages = [
     () => GetBuilder<QueueController>(builder: (controller) {
           return QueuesListWidget(
             queues: controller.sent,
             refresh: controller.initialize,
+            queueType: QueueType.sent,
           );
         }),
     () => GetBuilder<QueueController>(builder: (controller) {
           return QueuesListWidget(
             queues: controller.received,
             refresh: controller.initialize,
-            clickable: true,
+            queueType: QueueType.received,
           );
         }),
   ];
@@ -93,13 +87,13 @@ class QueuesWidget extends StatelessWidget {
 class QueuesListWidget extends StatelessWidget {
   final List<CourseQueue> queues;
   final Future<void> Function() refresh;
-  final bool clickable;
+  final QueueType queueType;
 
   const QueuesListWidget({
     Key? key,
     required this.queues,
     required this.refresh,
-    this.clickable = false,
+    required this.queueType,
   }) : super(key: key);
 
   @override
@@ -117,7 +111,7 @@ class QueuesListWidget extends StatelessWidget {
             }
             return CourseQueueItemWidget(
               queue: queues.elementAt(index),
-              clickable: clickable,
+              queueType: queueType,
             );
           },
         ),
@@ -154,25 +148,30 @@ class EmptyListPlaceholderWidget extends StatelessWidget {
   }
 }
 
+enum QueueType {
+  sent,
+  received,
+}
+
 class CourseQueueItemWidget extends StatelessWidget {
   final CourseQueue queue;
-  final bool clickable;
-
+  final QueueType queueType;
   final controller = Get.find<QueueController>();
 
   CourseQueueItemWidget({
     Key? key,
+    required this.queueType,
     required this.queue,
-    this.clickable = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (clickable) {
-          Get.toNamed("/queue", arguments: queue);
-        }
+        Get.toNamed("/queue", arguments: {
+          "queue": queue,
+          "type": queueType,
+        });
       },
       child: Card(
         borderOnForeground: true,

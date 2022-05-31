@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:digital_queue/controllers/queue_controller.dart';
 import 'package:digital_queue/pages/queue/queues_widget.dart';
 import 'package:digital_queue/pages/shared/loading_widget.dart';
@@ -11,23 +9,30 @@ import 'package:get/get.dart';
 class QueuePage extends StatelessWidget {
   QueuePage({Key? key}) : super(key: key);
 
-  final CourseQueue queue = Get.arguments as CourseQueue;
+  final CourseQueue queue = Get.arguments['queue'] as CourseQueue;
+  final QueueType queueType = Get.arguments['type'] as QueueType;
   final controller = Get.find<QueueController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Get.offAndToNamed("/main", parameters: {
-            "tab": "1",
-          }),
+        /*leading: IconButton(
+          onPressed: () {
+            final tab = queueType == QueueType.sent ? "0" : "1";
+            Get.offAndToNamed(
+              "/main",
+              parameters: {
+                "tab": tab,
+              },
+            );
+          },
           icon: const Icon(Icons.arrow_back),
-        ),
+        ),*/
         title: Text(queue.course),
       ),
       body: FutureBuilder(
-        future: controller.getQueueItems(queue.courseId),
+        future: controller.getQueueItems(queue.courseId, queueType),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const LoadingWidget();
@@ -36,22 +41,9 @@ class QueuePage extends StatelessWidget {
           return Obx(
             () => Column(
               children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(top: 4, left: 4),
-                  child: const Text(
-                    "Swipe right to complete an item",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 87, 87, 87),
-                    ),
-                  ),
-                ),
                 RefreshIndicator(
                   onRefresh: () async {
-                    await controller.getQueueItems(queue.courseId);
+                    await controller.getQueueItems(queue.courseId, queueType);
                   },
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -62,7 +54,13 @@ class QueuePage extends StatelessWidget {
                         return const EmptyListPlaceholderWidget();
                       }
 
-                      return QueueItemWidget(
+                      if (queueType == QueueType.sent) {
+                        return QueueItemWidget(
+                          item: controller.queue.elementAt(index),
+                        );
+                      }
+
+                      return DismissibleQueueItemWidget(
                         courseId: queue.courseId,
                         item: controller.queue.elementAt(index),
                         index: index,
@@ -79,12 +77,12 @@ class QueuePage extends StatelessWidget {
   }
 }
 
-class QueueItemWidget extends StatelessWidget {
+class DismissibleQueueItemWidget extends StatelessWidget {
   final QueueItem item;
   final String courseId;
   final int index;
 
-  const QueueItemWidget({
+  const DismissibleQueueItemWidget({
     Key? key,
     required this.item,
     required this.courseId,
@@ -163,32 +161,7 @@ class QueueItemWidget extends StatelessWidget {
             ),
           ),
         ),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  child: SvgPicture.asset(
-                    "assets/student.svg",
-                    height: 52,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    item.student!,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: QueueItemWidget(item: item),
       );
     });
   }
@@ -212,5 +185,45 @@ class QueueItemWidget extends StatelessWidget {
     )).future;
 
     return undo;
+  }
+}
+
+class QueueItemWidget extends StatelessWidget {
+  const QueueItemWidget({
+    Key? key,
+    required this.item,
+  }) : super(key: key);
+
+  final QueueItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: item.me ? Colors.green.shade50 : Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(4),
+              child: SvgPicture.asset(
+                "assets/student.svg",
+                height: 52,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(
+                item.me ? "You" : item.student!,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
