@@ -1,3 +1,4 @@
+import 'package:digital_queue/pages/queue/queues_widget.dart';
 import 'package:digital_queue/services/backend_service.dart';
 
 class QueueService extends BackendService {
@@ -48,10 +49,14 @@ class QueueService extends BackendService {
     return BackendResponse(data: queues);
   }
 
-  Future<BackendResponse> getCourseQueue(String courseId) async {
+  Future<BackendResponse> getCourseQueue(
+      String courseId, QueueType type) async {
     final response = await send(
       path: "/courses/$courseId/queue",
       method: "GET",
+      params: {
+        "received": type == QueueType.received ? true : false,
+      },
       requireAuth: true,
     );
 
@@ -112,16 +117,19 @@ class QueueItem {
   late String id;
   late String? student;
   late String? createdAt;
+  late bool me;
   QueueItem({
     required this.id,
     this.student,
     this.createdAt,
+    this.me = false,
   });
   factory QueueItem.fromJson(Map<String, dynamic> data) {
     return QueueItem(
       id: data["id"],
       student: data["student"],
       createdAt: data["createdAt"],
+      me: data["me"],
     );
   }
 }
