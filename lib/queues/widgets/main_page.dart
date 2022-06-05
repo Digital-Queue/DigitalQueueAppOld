@@ -1,8 +1,8 @@
-import 'package:digital_queue/pages/queue/queues_widget.dart';
+import 'package:digital_queue/queues/widgets/queues_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/queue_controller.dart';
+import '../controllers/queue_controller.dart';
 
 class MainPage extends StatelessWidget {
   MainPage({Key? key}) : super(key: key);

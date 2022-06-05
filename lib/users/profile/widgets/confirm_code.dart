@@ -1,5 +1,5 @@
-import 'package:digital_queue/controllers/change_mail_controller.dart';
-import 'package:digital_queue/pages/shared/loading_widget.dart';
+import 'package:digital_queue/shared/widgets/loading_widget.dart';
+import 'package:digital_queue/users/profile/controllers/change_mail_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
