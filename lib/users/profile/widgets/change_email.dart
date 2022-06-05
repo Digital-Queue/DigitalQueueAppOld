@@ -1,5 +1,5 @@
 import 'package:digital_queue/shared/widgets/loading_widget.dart';
-import 'package:digital_queue/users/profile/controllers/change_mail_controller.dart';
+import 'package:digital_queue/users/profile/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 class ChangeEmailPage extends StatelessWidget {
   ChangeEmailPage({Key? key}) : super(key: key);
 
-  final controller = Get.put(ChangeEmailController());
-  var _isProcessing = false.obs;
+  final controller = Get.put(ProfileController());
+  final _isProcessing = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class ChangeEmailPage extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () async {
               _isProcessing.value = true;
-              await controller.sendCode();
+              await controller.getCode();
               _isProcessing.value = false;
             },
             child: Row(

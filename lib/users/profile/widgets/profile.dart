@@ -118,14 +118,14 @@ class ProfileWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                controller.changeEmail();
+                controller.goToChangeEmail();
               },
               child: const Text(
                 "Change Email",
               ),
             ),
             ElevatedButton(
-              onPressed: () async => controller.exit(),
+              onPressed: () async => controller.signOut(),
               child: const Text(
                 "Log Out",
               ),

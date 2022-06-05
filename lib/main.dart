@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: "/setName",
-          page: () => SetNamePage(),
+          page: () => ChooseNamePage(),
         ),
         GetPage(
           name: "/changeEmail",
