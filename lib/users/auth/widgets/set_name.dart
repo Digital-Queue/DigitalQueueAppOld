@@ -1,13 +1,13 @@
 import 'package:digital_queue/shared/widgets/loading_widget.dart';
-import 'package:digital_queue/users/auth/controllers/set_name_controller.dart';
+import 'package:digital_queue/users/profile/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SetNamePage extends StatelessWidget {
-  SetNamePage({Key? key}) : super(key: key);
+class ChooseNamePage extends StatelessWidget {
+  ChooseNamePage({Key? key}) : super(key: key);
 
-  final controller = Get.put(SetNameController());
-  var _isProcessing = false.obs;
+  final controller = Get.put(ProfileController());
+  final _isProcessing = false.obs;
 
   @override
   Widget build(BuildContext context) {

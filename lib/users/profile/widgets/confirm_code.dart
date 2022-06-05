@@ -1,5 +1,5 @@
 import 'package:digital_queue/shared/widgets/loading_widget.dart';
-import 'package:digital_queue/users/profile/controllers/change_mail_controller.dart';
+import 'package:digital_queue/users/profile/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -8,9 +8,9 @@ import 'package:get/instance_manager.dart';
 class ConfirmCodePage extends StatelessWidget {
   ConfirmCodePage({Key? key}) : super(key: key);
 
-  final controller = Get.put(ChangeEmailController());
+  final controller = Get.put(ProfileController());
 
-  var _isProcessing = false.obs;
+  final _isProcessing = false.obs;
 
   @override
   Widget build(BuildContext context) {

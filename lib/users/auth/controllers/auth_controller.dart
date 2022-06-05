@@ -4,15 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  final userService = Get.find<UserService>();
+  final _emailTextController = TextEditingController();
+  final _codeTextController = TextEditingController();
 
-  late final TextEditingController _emailTextController;
-
-  @override
-  void onInit() {
-    _emailTextController = TextEditingController();
-    super.onInit();
-  }
+  get emailTextController => _emailTextController;
+  get codeTextController => _codeTextController;
 
   @override
   void dispose() {
@@ -20,9 +16,10 @@ class AuthController extends GetxController {
     super.dispose();
   }
 
-  TextEditingController get emailTextController {
-    return _emailTextController;
-  }
+  final userService = Get.find<UserService>();
+
+  final _isLoggingIn = false.obs;
+  get isLoggingIn => _isLoggingIn.value;
 
   Future authenticate() async {
     final email = emailTextController.value.text;
@@ -59,5 +56,49 @@ class AuthController extends GetxController {
         "email": _emailTextController.value.text
       },
     );
+  }
+
+  Future verifyAuthCode() async {
+    final email = Get.arguments["email"]!;
+    final status = Get.arguments["status"]!;
+    final code = codeTextController.value.text;
+
+    // add firebase token for FCM use case
+    final deviceToken = await FirebaseMessaging.instance.getToken();
+
+    final response = await userService.verifyAuth(
+      email: email,
+      code: code,
+      deviceToken: deviceToken,
+    );
+
+    if (response.error == true) {
+      Get.dialog(
+        AlertDialog(
+          content: Text(
+            "Error: ${response.message}",
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Get.back(),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    if (status == "created") {
+      Get.toNamed(
+        "/setName",
+        arguments: {
+          "email": email,
+        },
+      );
+      return;
+    }
+
+    Get.offAllNamed("/main");
   }
 }

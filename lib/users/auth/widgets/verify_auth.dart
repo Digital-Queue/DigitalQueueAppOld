@@ -1,13 +1,13 @@
 import 'package:digital_queue/shared/widgets/loading_widget.dart';
-import 'package:digital_queue/users/auth/controllers/verify_auth_controller.dart';
+import 'package:digital_queue/users/auth/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VerifyAuthPage extends StatelessWidget {
   VerifyAuthPage({Key? key}) : super(key: key);
 
-  final controller = Get.put(VerifyAuthController());
-  var _isLoggingIn = false.obs;
+  final controller = Get.put(AuthController());
+  final _isLoggingIn = false.obs;
 
   @override
   Widget build(BuildContext context) {
