@@ -1,7 +1,9 @@
-import 'package:digital_queue/controllers/queue_controller.dart';
-import 'package:digital_queue/pages/queue/queues_widget.dart';
-import 'package:digital_queue/pages/shared/loading_widget.dart';
-import 'package:digital_queue/services/queue_service.dart';
+import 'package:digital_queue/queues/controllers/queue_controller.dart';
+import 'package:digital_queue/queues/models/course_queue.dart';
+import 'package:digital_queue/queues/models/queue_item.dart';
+import 'package:digital_queue/queues/models/queue_type.dart';
+import 'package:digital_queue/queues/widgets/queues_widget.dart';
+import 'package:digital_queue/shared/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -17,18 +19,6 @@ class QueuePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        /*leading: IconButton(
-          onPressed: () {
-            final tab = queueType == QueueType.sent ? "0" : "1";
-            Get.offAndToNamed(
-              "/main",
-              parameters: {
-                "tab": tab,
-              },
-            );
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),*/
         title: Text(queue.course),
       ),
       body: FutureBuilder(

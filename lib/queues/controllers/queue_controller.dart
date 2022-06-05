@@ -1,6 +1,9 @@
-import 'package:digital_queue/pages/queue/queues_widget.dart';
-import 'package:digital_queue/services/queue_service.dart';
-import 'package:digital_queue/services/user_service.dart';
+import 'package:digital_queue/queues/models/course.dart';
+import 'package:digital_queue/queues/models/course_queue.dart';
+import 'package:digital_queue/queues/models/queue_item.dart';
+import 'package:digital_queue/queues/models/queue_type.dart';
+import 'package:digital_queue/queues/services/queue_service.dart';
+import 'package:digital_queue/users/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,5 +1,5 @@
-import 'package:digital_queue/controllers/verify_auth_controller.dart';
-import 'package:digital_queue/pages/shared/loading_widget.dart';
+import 'package:digital_queue/shared/widgets/loading_widget.dart';
+import 'package:digital_queue/users/auth/controllers/verify_auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

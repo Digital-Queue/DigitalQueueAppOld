@@ -1,9 +1,11 @@
-import 'package:digital_queue/controllers/queue_controller.dart';
-import 'package:digital_queue/pages/shared/loading_widget.dart';
-import 'package:digital_queue/services/queue_service.dart';
+import 'package:digital_queue/queues/controllers/queue_controller.dart';
+import 'package:digital_queue/queues/models/course_queue.dart';
+import 'package:digital_queue/shared/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
+import '../models/queue_type.dart';
 
 class QueuesWidget extends StatelessWidget {
   final controller = Get.find<QueueController>();
@@ -146,11 +148,6 @@ class EmptyListPlaceholderWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-enum QueueType {
-  sent,
-  received,
 }
 
 class CourseQueueItemWidget extends StatelessWidget {

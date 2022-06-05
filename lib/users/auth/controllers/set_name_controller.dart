@@ -1,4 +1,4 @@
-import 'package:digital_queue/services/user_service.dart';
+import 'package:digital_queue/users/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

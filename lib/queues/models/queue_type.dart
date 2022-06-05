@@ -1,0 +1,4 @@
+enum QueueType {
+  sent,
+  received,
+}

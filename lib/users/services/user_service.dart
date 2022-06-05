@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:digital_queue/models/user.dart';
-import 'package:digital_queue/services/backend_service.dart';
+import 'package:digital_queue/shared/services/backend_service.dart';
+import 'package:digital_queue/users/models/user.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
