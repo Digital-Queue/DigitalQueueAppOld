@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:digital_queue/firebase_options.dart';
 import 'package:digital_queue/queues/widgets/create_queue_item.dart';
 import 'package:digital_queue/queues/widgets/main_page.dart';
-import 'package:digital_queue/queues/widgets/queue_list_page.dart';
+import 'package:digital_queue/queues/widgets/queue.dart';
 import 'package:digital_queue/shared/services/backend_service.dart';
 import 'package:digital_queue/shared/services/notifications_service.dart';
 import 'package:digital_queue/users/auth/widgets/auth.dart';

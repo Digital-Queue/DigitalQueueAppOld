@@ -1,4 +1,4 @@
-import 'package:digital_queue/queues/widgets/queues_widget.dart';
+import 'package:digital_queue/queues/widgets/queues.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,7 +26,7 @@ class MainPage extends StatelessWidget {
           ),
         ],
       ),
-      body: QueuesWidget(),
+      body: QueuesPage(),
     );
   }
 }
