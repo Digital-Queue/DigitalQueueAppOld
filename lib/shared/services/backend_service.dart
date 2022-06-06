@@ -1,7 +1,8 @@
 import 'dart:developer';
 
+import 'package:digital_queue/shared/models/backend_response.dart';
+import 'package:digital_queue/shared/services/cache_service.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DioClientInterceptor extends Interceptor {
   @override
@@ -33,14 +34,15 @@ class DioClientInterceptor extends Interceptor {
 }
 
 class BackendService {
-  final cache = const FlutterSecureStorage();
+  final CacheService cacheService;
   final baseUrl = const String.fromEnvironment(
     "API_BASE_URL",
     defaultValue: 'http://10.0.2.2:5241/api',
   );
+
   late final Dio client;
 
-  BackendService() {
+  BackendService({required this.cacheService}) {
     client = Dio(BaseOptions(baseUrl: baseUrl));
     client.interceptors.add(DioClientInterceptor());
   }
@@ -55,7 +57,7 @@ class BackendService {
   }) async {
     if (requireAuth) {
       headers ??= {};
-      final accessToken = await cache.read(key: 'user_access_token');
+      final accessToken = await cacheService.getCachedAccessToken();
       final customHeaders = {
         "Authorization": "Bearer $accessToken",
       };
@@ -73,41 +75,8 @@ class BackendService {
         ),
       );
       return response.data as BackendResponse;
-    } on Exception catch (e) {
-      return BackendResponse.createError(message: "Something went wrong");
+    } on DioError catch (e) {
+      return BackendResponse.createError(message: e.message);
     }
   }
-}
-
-class BackendResponse {
-  late final dynamic data;
-  late final int? statusCode;
-
-  late final bool? error;
-  late final String? message;
-  late final String? stacktrace;
-
-  BackendResponse({
-    this.data,
-    this.statusCode,
-    this.error,
-    this.message,
-    this.stacktrace,
-  });
-
-  factory BackendResponse.createError({
-    required String message,
-    String? stackTrace,
-  }) =>
-      BackendResponse(
-        error: true,
-        message: message,
-        stacktrace: stackTrace,
-      );
-
-  factory BackendResponse.createResponse({
-    required dynamic data,
-    required int statusCode,
-  }) =>
-      BackendResponse(data: data, statusCode: statusCode);
 }
