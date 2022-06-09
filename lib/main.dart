@@ -1,18 +1,18 @@
-import 'dart:developer';
-
 import 'package:digital_queue/firebase_options.dart';
 import 'package:digital_queue/queues/widgets/create_queue_item.dart';
 import 'package:digital_queue/queues/widgets/main_page.dart';
 import 'package:digital_queue/queues/widgets/queue.dart';
-import 'package:digital_queue/shared/services/backend_service.dart';
+import 'package:digital_queue/shared/services/cache_service.dart';
 import 'package:digital_queue/shared/services/notifications_service.dart';
-import 'package:digital_queue/users/auth/widgets/auth.dart';
-import 'package:digital_queue/users/auth/widgets/set_name.dart';
-import 'package:digital_queue/users/auth/widgets/verify_auth.dart';
-import 'package:digital_queue/users/profile/widgets/change_email.dart';
-import 'package:digital_queue/users/profile/widgets/confirm_code.dart';
-import 'package:digital_queue/users/profile/widgets/profile.dart';
-import 'package:digital_queue/users/services/user_service.dart';
+import 'package:digital_queue/users/auth/pages/auth_page.dart';
+import 'package:digital_queue/users/auth/pages/choose_name_page.dart';
+import 'package:digital_queue/users/auth/pages/verify_auth_page.dart';
+import 'package:digital_queue/users/models/result.dart';
+import 'package:digital_queue/users/models/token.dart';
+import 'package:digital_queue/users/profile/pages/change_email_page.dart';
+import 'package:digital_queue/users/profile/pages/confirm_code_page.dart';
+import 'package:digital_queue/users/profile/pages/profile_page.dart';
+import 'package:digital_queue/users/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +54,11 @@ Future main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  final userService = Get.put(UserService());
+  final authService = Get.put(AuthService(
+    cacheService: Get.put(
+      CacheService(),
+    ),
+  ));
 
   // This widget is the root of your application.
   @override
@@ -116,25 +120,19 @@ class MyApp extends StatelessWidget {
   }
 
   FutureBuilder<dynamic> _showStartScreen() {
-    return FutureBuilder(
-      future: userService.initialize(),
+    return FutureBuilder<Result<Token>>(
+      future: authService.authenticate(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            // We have a user, go to main
-            final response = snapshot.data as BackendResponse?;
 
             // we do not have user data, user needs to
             // authenticate.
-            if (response == null) {
+            if (snapshot.data!.error) {
               return AuthPage();
             }
 
-            if (response.error == true) {
-              return AuthPage();
-            }
-
-            log(response.data["accessToken"]);
+            // We have a user, go to main
             return MainPage();
 
           default:

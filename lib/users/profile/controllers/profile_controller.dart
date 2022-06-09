@@ -1,4 +1,5 @@
 import 'package:digital_queue/users/models/user.dart';
+import 'package:digital_queue/users/services/auth_service.dart';
 import 'package:digital_queue/users/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,14 +13,19 @@ class ProfileController extends GetxController {
   get codeTextController => _codeTextController;
   get nameTextController => _nameTextController;
 
+  // flag to indicate whether a processing is running
+  final executing = false.obs;
+
   @override
   void dispose() {
     _emailTextController.dispose();
     _codeTextController.dispose();
+    _nameTextController.dispose();
     super.dispose();
   }
 
   final userService = Get.find<UserService>();
+  final authService = Get.find<AuthService>();
 
   var name = "".obs;
   var email = "".obs;
@@ -45,7 +51,7 @@ class ProfileController extends GetxController {
       return;
     }
 
-    final User profile = response.data;
+    final User profile = response.data!;
     name.value = profile.name!;
     email.value = profile.email!;
   }
@@ -56,7 +62,7 @@ class ProfileController extends GetxController {
 
   Future setName() async {
     final name = _nameTextController.value.text;
-    final response = await userService.updateName(name: name);
+    final response = await userService.setName(name: name);
 
     if (response.error == true) {
       Get.dialog(
@@ -142,7 +148,7 @@ class ProfileController extends GetxController {
   }
 
   Future signOut() async {
-    await userService.logout();
+    await authService.logout();
     Get.offNamed("/auth");
   }
 }
