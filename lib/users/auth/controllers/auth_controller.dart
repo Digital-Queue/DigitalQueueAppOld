@@ -1,4 +1,4 @@
-import 'package:digital_queue/users/services/user_service.dart';
+import 'package:digital_queue/users/services/auth_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,27 +13,28 @@ class AuthController extends GetxController {
   @override
   void dispose() {
     _emailTextController.dispose();
+    _codeTextController.dispose();
     super.dispose();
   }
 
-  final userService = Get.find<UserService>();
+  final userService = Get.find<AuthService>();
 
-  final _isLoggingIn = false.obs;
-  get isLoggingIn => _isLoggingIn.value;
+  // flag to indicate whether a processing is running
+  final executing = false.obs;
 
-  Future authenticate() async {
+  Future getAuthToken() async {
     final email = emailTextController.value.text;
 
-    var response = await userService.createAuth(
+    var result = await userService.getAuthenticationCode(
       email: email,
       deviceToken: await FirebaseMessaging.instance.getToken(),
     );
 
-    if (response.error == true) {
+    if (result.error == true) {
       Get.dialog(
         AlertDialog(
-          content: const Text(
-            "Unable to authenticate",
+          content: Text(
+            result.message!,
           ),
           actions: [
             TextButton(
@@ -46,7 +47,7 @@ class AuthController extends GetxController {
       return;
     }
 
-    final status = response.statusCode == 201 ? "created" : "returning";
+    final status = result.data["status"];
     Get.toNamed(
       "/verifyAuth",
       arguments: {
@@ -58,7 +59,7 @@ class AuthController extends GetxController {
     );
   }
 
-  Future verifyAuthCode() async {
+  Future verifyAuthToken() async {
     final email = Get.arguments["email"]!;
     final status = Get.arguments["status"]!;
     final code = codeTextController.value.text;
@@ -66,17 +67,17 @@ class AuthController extends GetxController {
     // add firebase token for FCM use case
     final deviceToken = await FirebaseMessaging.instance.getToken();
 
-    final response = await userService.verifyAuth(
+    final result = await userService.verifyAuthenticationCode(
       email: email,
       code: code,
       deviceToken: deviceToken,
     );
 
-    if (response.error == true) {
+    if (result.error == true) {
       Get.dialog(
         AlertDialog(
           content: Text(
-            "Error: ${response.message}",
+            result.message!,
           ),
           actions: [
             TextButton(
