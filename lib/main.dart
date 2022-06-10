@@ -1,7 +1,7 @@
 import 'package:digital_queue/firebase_options.dart';
-import 'package:digital_queue/queues/widgets/create_queue_item.dart';
-import 'package:digital_queue/queues/widgets/main_page.dart';
-import 'package:digital_queue/queues/widgets/queue.dart';
+import 'package:digital_queue/queues/pages/create_queue_item_page.dart';
+import 'package:digital_queue/queues/pages/main_page.dart';
+import 'package:digital_queue/queues/pages/queue_page.dart';
 import 'package:digital_queue/shared/services/cache_service.dart';
 import 'package:digital_queue/shared/services/notifications_service.dart';
 import 'package:digital_queue/users/auth/pages/auth_page.dart';
