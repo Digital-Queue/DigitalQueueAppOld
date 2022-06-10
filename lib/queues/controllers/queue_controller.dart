@@ -3,19 +3,16 @@ import 'package:digital_queue/queues/models/course_queue.dart';
 import 'package:digital_queue/queues/models/queue_item.dart';
 import 'package:digital_queue/queues/models/queue_type.dart';
 import 'package:digital_queue/queues/services/queue_service.dart';
+import 'package:digital_queue/shared/services/cache_service.dart';
 import 'package:digital_queue/users/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QueueController extends GetxController {
-  final queueService = Get.put(QueueService());
+  final queueService = Get.put(
+    QueueService(cacheService: Get.find<CacheService>()),
+  );
   final userService = Get.find<UserService>();
-
-  @override
-  void onInit() {
-    super.onInit();
-    findCourseTextController = TextEditingController();
-  }
 
   @override
   void dispose() {
@@ -23,7 +20,7 @@ class QueueController extends GetxController {
     super.dispose();
   }
 
-  late final TextEditingController findCourseTextController;
+  final findCourseTextController = TextEditingController();
 
   final currentPageIndex = 0.obs;
   final showCreateActionButton = true.obs;
@@ -33,9 +30,14 @@ class QueueController extends GetxController {
   final teacher = false.obs;
   final queue = List<QueueItem>.empty().obs;
 
+  Future<bool> isTeacher() async {
+    final permissions = await userService.getUserPermissions();
+    return permissions.any((element) => element == 'teacher');
+  }
+
   Future<void> initialize() async {
     // verify if user is teacher
-    teacher.value = await userService.isTeacherUser();
+    teacher.value = await isTeacher();
 
     // fetch queues and update lists
     final queues = await queueService.getQueues();
@@ -57,8 +59,8 @@ class QueueController extends GetxController {
       return;
     }
 
-    sent.value = queues.data["sent"];
-    received.value = queues.data["received"];
+    sent.value = queues.data?["sent"] ?? List.empty();
+    received.value = queues.data?["received"] ?? List.empty();
   }
 
   Future<List<Course>> findCourse(String query) async {
@@ -70,7 +72,7 @@ class QueueController extends GetxController {
       query: query,
     );
 
-    return result.data;
+    return result.data ?? List.empty();
   }
 
   late Course course;
@@ -145,6 +147,6 @@ class QueueController extends GetxController {
       queue.value = List.empty();
     }
 
-    queue.value = response.data;
+    queue.value = response.data ?? List.empty();
   }
 }

@@ -3,9 +3,14 @@ import 'package:digital_queue/queues/models/course_queue.dart';
 import 'package:digital_queue/queues/models/queue_item.dart';
 import 'package:digital_queue/queues/models/queue_type.dart';
 import 'package:digital_queue/shared/services/backend_service.dart';
+import 'package:digital_queue/shared/services/cache_service.dart';
+import 'package:digital_queue/users/models/result.dart';
 
 class QueueService extends BackendService {
-  Future<BackendResponse> search({required String query}) async {
+  QueueService({required CacheService cacheService})
+      : super(cacheService: cacheService);
+
+  Future<Result<List<Course>>> search({required String query}) async {
     final response = await send(
       path: "/courses",
       method: "GET",
@@ -16,16 +21,16 @@ class QueueService extends BackendService {
     );
 
     if (response.error == true) {
-      return BackendResponse(data: List.empty());
+      return Result.error(message: response.message);
     }
 
     final list = response.data as Iterable;
     final courses = list.map((e) => Course.fromJson(e));
 
-    return BackendResponse(data: courses.toList(growable: false));
+    return Result.ok(data: courses.toList(growable: false));
   }
 
-  Future<BackendResponse> getQueues() async {
+  Future<Result<Map<String, List<CourseQueue>>>> getQueues() async {
     final response = await send(
       path: "/courses/get-queues",
       method: "GET",
@@ -33,9 +38,7 @@ class QueueService extends BackendService {
     );
 
     if (response.error == true) {
-      return BackendResponse(
-        data: List<CourseQueue>.empty(),
-        error: true,
+      return Result.error(
         message: response.message,
       );
     }
@@ -49,10 +52,10 @@ class QueueService extends BackendService {
           received.map((e) => CourseQueue.fromJson("received", e)).toList()
     };
 
-    return BackendResponse(data: queues);
+    return Result.ok(data: queues);
   }
 
-  Future<BackendResponse> getCourseQueue(
+  Future<Result<List<QueueItem>>> getCourseQueue(
       String courseId, QueueType type) async {
     final response = await send(
       path: "/courses/$courseId/queue",
@@ -64,27 +67,31 @@ class QueueService extends BackendService {
     );
 
     if (response.error == true) {
-      return BackendResponse(data: List<CourseQueue>.empty());
+      return Result.error(message: response.message);
     }
 
     final list = response.data as Iterable;
 
     final queues = list.map((e) => QueueItem.fromJson(e)).toList();
 
-    return BackendResponse(data: queues);
+    return Result.ok(data: queues);
   }
 
-  Future<BackendResponse> createQueueItem({required String courseId}) async {
+  Future<Result> createQueueItem({required String courseId}) async {
     final response = await send(
       path: "/courses/$courseId/queue/create",
       method: "POST",
       requireAuth: true,
     );
 
-    return response;
+    if (response.error == true) {
+      return Result.error(message: response.message ?? "Something went wrong");
+    }
+
+    return Result.ok();
   }
 
-  Future<BackendResponse> completeQueueItem({
+  Future<Result> completeQueueItem({
     required String courseId,
     required String itemId,
   }) async {
@@ -94,6 +101,10 @@ class QueueService extends BackendService {
       requireAuth: true,
     );
 
-    return response;
+    if (response.error == true) {
+      return Result.error(message: response.message ?? "Something went wrong");
+    }
+
+    return Result.ok();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:digital_queue/queues/controllers/queue_controller.dart';
-import 'package:digital_queue/queues/widgets/search_course.dart';
+import 'package:digital_queue/queues/pages/search_course_page.dart';
 import 'package:digital_queue/shared/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -66,7 +66,7 @@ class CreateQueueItemPage extends StatelessWidget {
         const SizedBox(
           height: 12,
         ),
-        SearchCourseWidget(controller: controller),
+        SearchCoursePage(controller: controller),
         const SizedBox(
           height: 12,
         ),

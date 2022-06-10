@@ -3,10 +3,10 @@ import 'package:digital_queue/queues/models/course.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class SearchCourseWidget extends StatelessWidget {
+class SearchCoursePage extends StatelessWidget {
   final QueueController controller;
 
-  const SearchCourseWidget({
+  const SearchCoursePage({
     Key? key,
     required this.controller,
   }) : super(key: key);
