@@ -12,7 +12,9 @@ class QueueController extends GetxController {
   final queueService = Get.put(
     QueueService(cacheService: Get.find<CacheService>()),
   );
-  final userService = Get.find<UserService>();
+  final userService = Get.put(
+    UserService(cacheService: Get.find<CacheService>()),
+  );
 
   @override
   void dispose() {
