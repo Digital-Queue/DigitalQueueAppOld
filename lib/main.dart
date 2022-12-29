@@ -128,7 +128,7 @@ class MyApp extends StatelessWidget {
 
             // we do not have user data, user needs to
             // authenticate.
-            if (snapshot.data!.error) {
+            if (snapshot.data != null && snapshot.data?.error == true) {
               return AuthPage();
             }
 
