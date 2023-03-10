@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCk5wW9J5odCa0s1h3Mpq_z2IYiawP2-MY',
-    appId: '1:1003920885591:android:9c13c3382d3076d714e012',
+    appId: '1:1003920885591:android:13d339c4cde5ba0914e012',
     messagingSenderId: '1003920885591',
     projectId: 'digital-queue-f565e',
     storageBucket: 'digital-queue-f565e.appspot.com',
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDvPQyB3WDLn_SXn-f5Jn_-R2xmauQV0mg',
-    appId: '1:1003920885591:ios:193500ab9bf87c5c14e012',
+    appId: '1:1003920885591:ios:a4c20e26df01539014e012',
     messagingSenderId: '1003920885591',
     projectId: 'digital-queue-f565e',
     storageBucket: 'digital-queue-f565e.appspot.com',
