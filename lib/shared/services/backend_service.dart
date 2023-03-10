@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 class DioClientInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    log(err.message, stackTrace: err.stackTrace);
+    log(err.message!, stackTrace: err.stackTrace);
     handler.resolve(
       Response(
         requestOptions: err.requestOptions,
@@ -76,7 +76,7 @@ class BackendService {
       );
       return response.data as BackendResponse;
     } on DioError catch (e) {
-      return BackendResponse.createError(message: e.message);
+      return BackendResponse.createError(message: e.message!);
     }
   }
 }
